@@ -1,0 +1,35 @@
+# SSL证书监控配置
+
+# Prometheus监控规则
+groups:
+  - name: ssl_certificate_rules
+    rules:
+      - alert: SSLCertificateExpiringSoon
+        expr: ssl_certificate_days_until_expiry < 30
+        for: 1h
+        labels:
+          severity: warning
+          service: ssl
+        annotations:
+          summary: "SSL证书即将过期"
+          description: "SSL证书将在 {{ $value }} 天后过期，请及时续期"
+
+      - alert: SSLCertificateExpired
+        expr: ssl_certificate_days_until_expiry < 0
+        for: 0m
+        labels:
+          severity: critical
+          service: ssl
+        annotations:
+          summary: "SSL证书已过期"
+          description: "SSL证书已过期 {{ $value }} 天，请立即续期"
+
+      - alert: SSLCertificateMissing
+        expr: ssl_certificate_exists == 0
+        for: 0m
+        labels:
+          severity: critical
+          service: ssl
+        annotations:
+          summary: "SSL证书文件不存在"
+          description: "SSL证书文件缺失，网站HTTPS服务可能中断"

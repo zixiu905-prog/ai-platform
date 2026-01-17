@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; connect-src 'self' http://localhost:* ws://localhost:*;">
+    <title>AiDesign Desktop</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f5f5f5;
+            overflow: hidden;
+        }
+        
+        #root {
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        /* 加载动画 */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            z-index: 9999;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #1890ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* 隐藏加载动画 */
+        .loading.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="root">
+        <div class="loading" id="loading">
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+    
+    <script>
+        // 页面加载完成后隐藏加载动画
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loading = document.getElementById('loading');
+                if (loading) {
+                    loading.classList.add('hidden');
+                }
+            }, 500);
+        });
+        
+        // Electron API 占位符
+        if (typeof window !== 'undefined' && !window.electronAPI) {
+            window.electronAPI = {
+                // 文件操作 API
+                fileManager: {
+                    selectFile: () => Promise.resolve(null),
+                    selectFiles: () => Promise.resolve([]),
+                    selectDirectory: () => Promise.resolve(null),
+                    saveFile: () => Promise.resolve(false),
+                    readFile: () => Promise.resolve(null),
+                    writeFile: () => Promise.resolve(false),
+                    exists: () => Promise.resolve(false),
+                    createDirectory: () => Promise.resolve(false),
+                    deleteFile: () => Promise.resolve(false),
+                    readDirectory: () => Promise.resolve([]),
+                    getFileStats: () => Promise.resolve(null),
+                    watchFile: () => ({ remove: () => {} }),
+                    copyFile: () => Promise.resolve(false),
+                    moveFile: () => Promise.resolve(false),
+                    getHomeDirectory: () => Promise.resolve(''),
+                    getDocumentsDirectory: () => Promise.resolve(''),
+                    getDesktopDirectory: () => Promise.resolve(''),
+                    getDownloadsDirectory: () => Promise.resolve(''),
+                    getTempDirectory: () => Promise.resolve(''),
+                    getAppDataDirectory: () => Promise.resolve(''),
+                    openFile: () => Promise.resolve(false),
+                    openDirectory: () => Promise.resolve(false),
+                    revealFile: () => Promise.resolve(false),
+                    compressFiles: () => Promise.resolve(null),
+                    extractArchive: () => Promise.resolve(false),
+                    searchFiles: () => Promise.resolve([])
+                },
+                
+                // 软件管理 API
+                softwareManager: {
+                    getInstalledSoftware: () => Promise.resolve([]),
+                    isSoftwareInstalled: () => Promise.resolve(false),
+                    launchSoftware: () => Promise.resolve(false),
+                    getSoftwareInfo: () => Promise.resolve(null),
+                    installSoftware: () => Promise.resolve(false),
+                    uninstallSoftware: () => Promise.resolve(false),
+                    getDefaultApplications: () => Promise.resolve({}),
+                    setDefaultApplication: () => Promise.resolve(false),
+                    openWithDefaultApp: () => Promise.resolve(false)
+                },
+                
+                // AI 管理 API
+                aiManager: {
+                    processImage: () => Promise.resolve(null),
+                    speechToText: () => Promise.resolve(null),
+                    textToSpeech: () => Promise.resolve(null),
+                    generateContent: () => Promise.resolve(null),
+                    analyzeImage: () => Promise.resolve(null),
+                    recognizeText: () => Promise.resolve(null),
+                    translateText: () => Promise.resolve(null),
+                    generateImage: () => Promise.resolve(null),
+                    getModels: () => Promise.resolve([]),
+                    loadModel: () => Promise.resolve(false),
+                    unloadModel: () => Promise.resolve(false),
+                    getModelInfo: () => Promise.resolve(null)
+                },
+                
+                // 系统管理 API
+                systemManager: {
+                    getSystemInfo: () => Promise.resolve({}),
+                    getProcessList: () => Promise.resolve([]),
+                    killProcess: () => Promise.resolve(false),
+                    getSystemStats: () => Promise.resolve({}),
+                    getDiskUsage: () => Promise.resolve([]),
+                    getNetworkStats: () => Promise.resolve({}),
+                    clearCache: () => Promise.resolve(false),
+                    optimizeSystem: () => Promise.resolve(false),
+                    checkUpdates: () => Promise.resolve({}),
+                    installUpdate: () => Promise.resolve(false),
+                    getEnvironmentInfo: () => Promise.resolve({})
+                },
+                
+                // 通知管理 API
+                notifications: {
+                    show: () => Promise.resolve(''),
+                    requestPermission: () => Promise.resolve('granted'),
+                    checkPermission: () => Promise.resolve('granted'),
+                    onClicked: () => {}
+                },
+                
+                // 窗口管理 API
+                window: {
+                    minimize: () => {},
+                    maximize: () => {},
+                    close: () => {},
+                    restore: () => {},
+                    hide: () => {},
+                    show: () => {},
+                    focus: () => {},
+                    blur: () => {},
+                    setTitle: () => {},
+                    getSize: () => ({ width: 800, height: 600 }),
+                    setSize: () => {},
+                    getPosition: () => ({ x: 0, y: 0 }),
+                    setPosition: () => {},
+                    center: () => {},
+                    setAlwaysOnTop: () => {},
+                    setFullScreen: () => {},
+                    isFullScreen: () => false,
+                    capturePage: () => Promise.resolve('')
+                }
+            };
+        }
+    </script>
+</body>
+</html>

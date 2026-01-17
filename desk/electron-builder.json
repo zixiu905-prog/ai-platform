@@ -1,0 +1,120 @@
+{
+  "appId": "com.aidesign.aiplatform",
+  "productName": "AI智能体平台",
+  "copyright": "Copyright © 2024 AI Design Platform",
+  "directories": {
+    "output": "dist",
+    "buildResources": "build-resources"
+  },
+  "files": [
+    "dist/**/*",
+    "node_modules/**/*",
+    "package.json"
+  ],
+  "extraResources": [
+    {
+      "from": "../frontend/dist",
+      "to": "frontend",
+      "filter": ["**/*"]
+    }
+  ],
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64"]
+      }
+    ],
+    "publisherName": "AI Design Platform",
+    "verifyUpdateCodeSignature": false,
+    "sign": null,
+    "signAndEditExecutable": false
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "AI智能体平台",
+    "perMachine": false,
+    "runAfterFinish": true
+  },
+  "mac": {
+    "target": [
+      {
+        "target": "dmg",
+        "arch": ["x64", "arm64"]
+      },
+      {
+        "target": "zip",
+        "arch": ["x64", "arm64"]
+      }
+    ],
+    "category": "public.app-category.developer-tools",
+    "hardenedRuntime": true
+  },
+  "dmg": {
+    "title": "AI智能体平台安装程序",
+    "contents": [
+      {
+        "x": 130,
+        "y": 220
+      },
+      {
+        "x": 410,
+        "y": 220,
+        "type": "link",
+        "path": "/Applications"
+      }
+    ]
+  },
+  "linux": {
+    "target": [
+      {
+        "target": "AppImage",
+        "arch": ["x64"]
+      },
+      {
+        "target": "deb",
+        "arch": ["x64"]
+      },
+      {
+        "target": "rpm",
+        "arch": ["x64"]
+      },
+      {
+        "target": "snap",
+        "arch": ["x64"]
+      }
+    ],
+    "category": "Development",
+    "desktop": {
+      "Name": "AI智能体平台",
+      "Comment": "AI驱动的智能体开发平台",
+      "Keywords": "ai;development;platform;"
+    }
+  },
+  "snap": {
+    "plugs": [
+      "default",
+      "desktop",
+      "desktop-legacy",
+      "home",
+      "x11",
+      "unity7",
+      "browser-support",
+      "network",
+      "gsettings",
+      "audio-playback",
+      "pulseaudio",
+      "opengl"
+    ]
+  },
+  "publish": [
+    {
+      "provider": "github",
+      "owner": "your-org",
+      "repo": "ai-platform"
+    }
+  ]
+}

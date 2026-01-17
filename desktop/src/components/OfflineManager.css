@@ -1,0 +1,402 @@
+.offline-manager {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.offline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.progress-section {
+  grid-column: 1 / -1;
+  margin: 16px 0;
+}
+
+.date-info {
+  grid-column: 1 / -1;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.ant-statistic-title {
+  font-size: 14px;
+  color: #8c8c8c;
+  margin-bottom: 4px;
+}
+
+.ant-statistic-content {
+  font-size: 24px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.ant-statistic-content-suffix {
+  font-size: 16px;
+  font-weight: normal;
+  color: #8c8c8c;
+}
+
+.ant-progress {
+  margin-top: 8px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .offline-manager {
+    padding: 16px;
+  }
+  
+  .offline-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .offline-manager {
+    padding: 12px;
+  }
+  
+  .stats-grid {
+    gap: 12px;
+  }
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.offline-manager .ant-card {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.offline-manager .ant-col:nth-child(1) .ant-card {
+  animation-delay: 0.1s;
+}
+
+.offline-manager .ant-col:nth-child(2) .ant-card {
+  animation-delay: 0.2s;
+}
+
+.offline-manager .ant-col:nth-child(3) .ant-card {
+  animation-delay: 0.3s;
+}
+
+/* 状态指示器 */
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.status-indicator.online {
+  background-color: #52c41a;
+}
+
+.status-indicator.offline {
+  background-color: #ff4d4f;
+}
+
+/* 标签样式 */
+.offline-manager .ant-tag {
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px;
+}
+
+/* 徽章样式 */
+.ant-badge-count {
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  min-width: 18px;
+  height: 18px;
+  line-height: 18px;
+}
+
+/* 按钮样式 */
+.offline-manager .ant-btn {
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.offline-manager .ant-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+/* 统计数字动画 */
+.ant-statistic-content {
+  transition: all 0.3s ease;
+}
+
+/* 滑块样式 */
+.ant-slider {
+  margin: 16px 0;
+}
+
+.ant-slider-rail {
+  background-color: #f5f5f5;
+}
+
+.ant-slider-track {
+  background-color: #1890ff;
+}
+
+.ant-slider-handle {
+  border-color: #1890ff;
+}
+
+.ant-slider-handle:hover {
+  border-color: #40a9ff;
+}
+
+.ant-slider-handle-active {
+  border-color: #096dd9;
+}
+
+/* 拖拽上传样式 */
+.ant-upload-drag {
+  border: 2px dashed #d9d9d9;
+  border-radius: 8px;
+  background-color: #fafafa;
+  padding: 40px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.ant-upload-drag:hover {
+  border-color: #1890ff;
+  background-color: #f0f8ff;
+}
+
+.ant-upload-drag.ant-upload-drag-hover {
+  border-color: #1890ff;
+  background-color: #f0f8ff;
+}
+
+.ant-upload-drag-icon {
+  font-size: 48px;
+  color: #d9d9d9;
+  margin-bottom: 16px;
+}
+
+.ant-upload-text {
+  font-size: 16px;
+  color: #262626;
+  margin-bottom: 8px;
+}
+
+.ant-upload-hint {
+  font-size: 14px;
+  color: #8c8c8c;
+}
+
+/* 进度条样式 */
+.ant-progress-line {
+  margin-bottom: 0;
+}
+
+.ant-progress-text {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* 表单样式 */
+.ant-form-item {
+  margin-bottom: 24px;
+}
+
+.ant-form-item:last-child {
+  margin-bottom: 0;
+}
+
+.ant-form-item-label > label {
+  font-weight: 500;
+  color: #262626;
+}
+
+/* 输入框样式 */
+.ant-input-number {
+  width: 100%;
+}
+
+.ant-input-number:hover {
+  border-color: #40a9ff;
+}
+
+.ant-input-number:focus {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+/* 开关样式 */
+.ant-switch {
+  min-width: 44px;
+}
+
+.ant-switch-loading-icon,
+.ant-switch-handle {
+  height: 18px;
+  width: 18px;
+}
+
+/* 模态框样式 */
+.ant-modal .ant-form-item {
+  margin-bottom: 16px;
+}
+
+.ant-modal .ant-form-item:last-child {
+  margin-bottom: 0;
+}
+
+/* 标签页样式 */
+.ant-tabs {
+  margin-bottom: 24px;
+}
+
+.ant-tabs-tab {
+  font-weight: 500;
+}
+
+.ant-tabs-tab-active {
+  color: #1890ff;
+}
+
+.ant-tabs-ink-bar {
+  background-color: #1890ff;
+}
+
+/* 卡片样式 */
+.ant-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f0f0f0;
+}
+
+.ant-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+.ant-card-head {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 16px 24px;
+}
+
+.ant-card-head-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.ant-card-body {
+  padding: 24px;
+}
+
+/* 网格布局 */
+.ant-row {
+  margin-bottom: 0;
+}
+
+.ant-col {
+  padding-bottom: 24px;
+}
+
+/* 空状态样式 */
+.ant-empty {
+  padding: 40px 0;
+}
+
+.ant-empty-description {
+  color: #bfbfbf;
+  font-size: 14px;
+}
+
+/* 加载状态样式 */
+.ant-spin-container {
+  position: relative;
+}
+
+.ant-spin-blur {
+  opacity: 0.5;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* 警告框样式 */
+.ant-alert {
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.ant-alert-message {
+  font-weight: 500;
+}
+
+.ant-alert-description {
+  font-size: 14px;
+}
+
+/* 统计容器样式 */
+.stats-grid .ant-statistic {
+  text-align: center;
+  padding: 16px;
+  background-color: #fafafa;
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
+}
+
+.stats-grid .ant-statistic:hover {
+  background-color: #f0f8ff;
+  border-color: #1890ff;
+  transition: all 0.2s ease;
+}
+
+/* 工具提示样式 */
+.ant-tooltip {
+  font-size: 12px;
+}
+
+.ant-tooltip-inner {
+  border-radius: 6px;
+  background-color: rgba(0, 0, 0, 0.85);
+  color: #fff;
+}
+
+.ant-tooltip-arrow-content {
+  background-color: rgba(0, 0, 0, 0.85);
+}

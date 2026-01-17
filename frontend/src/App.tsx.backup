@@ -1,0 +1,237 @@
+import React from 'react'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider, useAuth } from '@/contexts/AuthContext'
+import { ThemeProvider } from '@/contexts/ThemeContext'
+import { ChatProvider } from '@/contexts/ChatContext'
+import { Button } from '@/components/ui/button'
+import Layout from '@/components/Layout'
+import HomePage from '@/pages/HomePage'
+import Dashboard from '@/pages/Dashboard'
+import Login from '@/pages/Login'
+import Register from '@/pages/Register'
+import ApiTest from '@/pages/ApiTest'
+import Chat from '@/pages/Chat'
+import { UpdateNotification, UpdateStatusIndicator } from '@/components/UpdateNotification'
+import { WorkflowVisualEditor } from '@/pages/WorkflowVisualEditor'
+import { WorkflowList } from '@/pages/WorkflowList'
+import { SoftwareApiManagement } from '@/pages/SoftwareApiManagement'
+import WeChatCallback from '@/pages/auth/WeChatCallback'
+import WeChatMobileCallback from '@/pages/auth/WeChatMobileCallback'
+import ImageGeneration from '@/pages/ImageGeneration'
+import SpeechRecognition from '@/pages/SpeechRecognition'
+import BackupManager from '@/pages/BackupManager'
+import DesktopDownloadPage from '@/pages/DesktopDownloadPage'
+import DownloadPage from '@/pages/DownloadPage'
+
+// 移动端优化组件
+import { useMobileDetection } from '@/hooks/useMobileDetection'
+import { MobileLayout } from '@/components/layout/MobileLayout'
+
+// 受保护路由组件
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isAuthenticated, isLoading } = useAuth()
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    )
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />
+  }
+
+  return <>{children}</>
+}
+
+// 公开路由组件（排除主页）
+const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isAuthenticated } = useAuth()
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />
+  }
+
+  return <>{children}</>
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <AuthProvider>
+        <ChatProvider>
+          <UpdateStatusIndicator />
+          <Router>
+            <Routes>
+            {/* 公开路由 - 主页 */}
+            <Route path="/" element={<HomePage />} />
+            
+            {/* 桌面应用下载 */}
+            <Route path="/desktop/download" element={<DesktopDownloadPage />} />
+            
+            {/* 软件下载中心 */}
+            <Route path="/download" element={<DownloadPage />} />
+
+            {/* 认证相关 */}
+            <Route path="/login" element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            } />
+            <Route path="/register" element={
+              <PublicRoute>
+                <Register />
+              </PublicRoute>
+            } />
+            
+            {/* OAuth回调路由 */}
+            <Route path="/auth/wechat/callback" element={<WeChatCallback />} />
+            <Route path="/auth/wechat/mobile/callback" element={<WeChatMobileCallback />} />
+            
+            {/* 受保护的路由 */}
+            <Route path="/dashboard/*" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Dashboard />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            
+            {/* AI对话功能 */}
+            <Route path="/chat" element={
+              <ProtectedRoute>
+                <Chat />
+              </ProtectedRoute>
+            } />
+            <Route path="/chat/:conversationId" element={
+              <ProtectedRoute>
+                <Chat />
+              </ProtectedRoute>
+            } />
+            
+            {/* AI功能路由 */}
+            <Route path="/ai/image-generation" element={
+              <ProtectedRoute>
+                <Layout>
+                  <ImageGeneration />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ai/speech-recognition" element={
+              <ProtectedRoute>
+                <Layout>
+                  <SpeechRecognition />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            
+            {/* 其他受保护的路由 */}
+            <Route path="/ai/*" element={
+              <ProtectedRoute>
+                <Layout>
+                  <div className="p-6">
+                    <h1 className="text-2xl font-bold">AI助手</h1>
+                    <p className="text-muted-foreground">AI助手功能正在开发中...</p>
+                  </div>
+                </Layout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/workflows" element={
+              <ProtectedRoute>
+                <Layout>
+                  <WorkflowList />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/workflows/visual-editor/:workflowId?" element={
+              <ProtectedRoute>
+                <WorkflowVisualEditor />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/software-api-management" element={
+              <ProtectedRoute>
+                <Layout>
+                  <SoftwareApiManagement />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/backup-manager" element={
+              <ProtectedRoute>
+                <Layout>
+                  <BackupManager />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/scripts/*" element={
+              <ProtectedRoute>
+                <Layout>
+                  <div className="p-6">
+                    <h1 className="text-2xl font-bold">脚本管理</h1>
+                    <p className="text-muted-foreground">脚本管理功能正在开发中...</p>
+                  </div>
+                </Layout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/users/*" element={
+              <ProtectedRoute>
+                <Layout>
+                  <div className="p-6">
+                    <h1 className="text-2xl font-bold">用户管理</h1>
+                    <p className="text-muted-foreground">用户管理功能正在开发中...</p>
+                  </div>
+                </Layout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/settings/*" element={
+              <ProtectedRoute>
+                <Layout>
+                  <div className="p-6">
+                    <h1 className="text-2xl font-bold">设置</h1>
+                    <p className="text-muted-foreground">系统设置功能正在开发中...</p>
+                  </div>
+                </Layout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/api-test" element={
+              <ProtectedRoute>
+                <Layout>
+                  <ApiTest />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            
+            {/* 默认重定向 - 已移除，因为 "/" 路由现在指向 HomePage */}
+
+            {/* 404页面 */}
+            <Route path="*" element={
+              <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                  <h1 className="text-4xl font-bold mb-4">404</h1>
+                  <p className="text-muted-foreground mb-4">页面不存在</p>
+                  <Button onClick={() => window.location.href = '/'}>
+                    返回首页
+                  </Button>
+                </div>
+              </div>
+            } />
+            </Routes>
+          </Router>
+          <UpdateNotification />
+        </ChatProvider>
+      </AuthProvider>
+    </ThemeProvider>
+  )
+}
+
+export default App

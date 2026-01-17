@@ -1,0 +1,218 @@
+{
+  "name": "ai-platform-desktop",
+  "version": "1.0.0",
+  "description": "AI智能体平台桌面应用",
+  "main": "dist/src/main.js",
+  "homepage": "./",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:vite\" \"npm run dev:electron\"",
+    "dev:vite": "cd ../frontend && npm run dev",
+    "dev:electron": "electron .",
+    "build": "npm run build:renderer && npm run build:main",
+    "build:renderer": "cd ../frontend && npm run build",
+    "build:main": "tsc -p tsconfig.electron.json",
+    "build:all": "npm run build:renderer && npm run build:main && electron-builder",
+    "build:windows-store": "node ../scripts/build-windows-store.js build",
+    "build:mas": "node ../scripts/build-mas.js build",
+    "build:dmg": "electron-builder --mac dmg --x64 --arm64",
+    "build:zip": "electron-builder --mac zip --x64 --arm64",
+    "build:appx": "electron-builder --win appx --x64",
+    "build:nsis": "electron-builder --win nsis",
+    "build:portable": "electron-builder --win portable --x64",
+    "build:linux": "electron-builder --linux",
+    "build:appimage": "electron-builder --linux AppImage",
+    "build:deb": "electron-builder --linux deb",
+    "build:rpm": "electron-builder --linux rpm",
+    "build:snap": "electron-builder --linux snap",
+    "build:flatpak": "electron-builder --linux flatpak",
+    "deploy:windows-store": "node ../scripts/deploy-windows-store.js deploy",
+    "deploy:mas": "node ../scripts/deploy-mas.js upload",
+    "deploy:linux-stores": "node ../scripts/deploy-linux-stores.js deploy",
+    "preview": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "build:web": "electron-builder --config electron-builder-web.json --win",
+    "build:web-installer": "npm run build:renderer && npm run build:main && electron-builder --config electron-builder-web.json --win nsis-web",
+    "build:web-full": "npm run build:renderer && npm run build:main && electron-builder --config electron-builder-web.json --win",
+    "build:mac-web": "npm run build:renderer && npm run build:main && electron-builder --config electron-builder-mac-web.json --mac",
+    "build:mac-dmg": "npm run build:renderer && npm run build:main && electron-builder --config electron-builder-mac-web.json --mac dmg",
+    "build:complete": "npm run build:all && npm run build:web-full"
+  },
+  "keywords": [
+    "electron",
+    "react",
+    "typescript",
+    "ai",
+    "desktop"
+  ],
+  "author": "AI Platform Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "concurrently": "^8.2.2",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.8.1",
+    "electron-packager": "^17.1.2",
+    "typescript": "^5.3.0",
+    "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "canvas": "^3.2.0",
+    "chokidar": "^3.5.3",
+    "clsx": "^2.0.0",
+    "electron-store": "^8.1.0",
+    "electron-updater": "^6.1.7",
+    "lucide-react": "^0.294.0",
+    "node-fetch": "^2.7.0",
+    "react": "^18.2.0",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.30.2",
+    "react-toastify": "^9.1.3",
+    "socket.io-client": "^4.7.4",
+    "tailwind-merge": "^2.0.0",
+    "winreg": "^1.2.5"
+  },
+  "build": {
+    "appId": "com.aiplatform.desktop",
+    "productName": "AI智能体平台",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "dist/**/*",
+      "../frontend/dist/**/*",
+      "node_modules/**/*"
+    ],
+    "npmRebuild": false,
+    "publish": {
+      "provider": "github",
+      "owner": "your-username",
+      "repo": "ai-platform"
+    },
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "icon": "build/icon.icns",
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false,
+      "extendInfo": {
+        "NSDocumentsFolderUsageDescription": "访问文档文件夹以打开和保存项目文件",
+        "NSDownloadsFolderUsageDescription": "访问下载文件夹以管理项目文件",
+        "NSCameraUsageDescription": "访问摄像头以支持视频功能",
+        "NSMicrophoneUsageDescription": "访问麦克风以支持语音功能",
+        "NSHighResolutionCapable": true,
+        "NSSupportsAutomaticGraphicsSwitching": true
+      }
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "appx",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "publisherName": "AI Platform Team",
+      "verifyUpdateCodeSignature": false
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "snap",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "rpm",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "flatpak",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png",
+      "category": "Development",
+      "desktop": {
+        "Name": "AI智能体平台",
+        "Name[en]": "AI Platform",
+        "Comment": "AI驱动的智能开发平台",
+        "Comment[en]": "AI-powered intelligent development platform",
+        "Keywords": "AI;development;platform;intelligent;code;programming",
+        "Categories": "Development;IDE;",
+        "StartupWMClass": "ai-platform-desktop"
+      }
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "AI智能体平台",
+      "include": "build/installer.nsh"
+    },
+    "snap": {
+      "plugs": [
+        "default",
+        "desktop",
+        "desktop-legacy",
+        "home",
+        "x11",
+        "unity7",
+        "browser-support",
+        "network",
+        "gsettings",
+        "audio-playback",
+        "pulseaudio",
+        "opengl"
+      ]
+    }
+  }
+}

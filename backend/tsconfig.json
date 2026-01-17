@@ -1,0 +1,51 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "lib": ["ES2020"],
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "downlevelIteration": true,
+    "incremental": false,
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "baseUrl": "./",
+    "useUnknownInCatchVariables": false,
+    "paths": {
+      "@/controllers/*": ["src/controllers/*"],
+      "@/services/*": ["src/services/*"],
+      "@/middleware/*": ["src/middleware/*"],
+      "@/utils/*": ["src/utils/*"],
+      "@/types/*": ["src/types/*"],
+      "@/config/*": ["src/config/*"],
+      "@/routes/*": ["src/routes/*"]
+    }
+  },
+  "include": ["src/**/*", "prisma/**/*"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "src/routes/adminFeatureControl.ts",
+    "src/routes/adminWorkflows.ts",
+    "src/routes/advancedAI.ts",
+    "src/routes/alerts.ts",
+    "src/routes/analytics.ts",
+    "src/routes/metrics.ts",
+    "src/routes/permissions.ts",
+    "src/routes/sso.ts",
+    "src/controllers/tenantController.ts",
+    "src/middleware/tenantMiddleware.ts",
+    "src/middleware/permissionMiddleware.ts",
+    "src/jobs/paymentRetryJob.ts"
+  ]
+}

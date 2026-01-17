@@ -1,0 +1,115 @@
+# Prometheus配置文件
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'ai-platform-production'
+    replica: 'prometheus-1'
+
+# 告警规则文件
+rule_files:
+  - "rules/*.yml"
+  - "alert_rules.yml"
+  - "../alertmanager/rules/*.yml"
+
+# 告警管理器配置
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+# 抓取配置
+scrape_configs:
+  # Prometheus自身监控
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+    metrics_path: '/metrics'
+    scrape_interval: 5s
+
+  # Node Exporter - 系统指标
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: 
+        - 'node-exporter:9100'
+        - 'backend-node-exporter:9100'
+        - 'frontend-node-exporter:9100'
+        - 'postgres-node-exporter:9100'
+        - 'redis-node-exporter:9100'
+    scrape_interval: 10s
+    metrics_path: '/metrics'
+
+  # 后端应用指标
+  - job_name: 'backend-api'
+    static_configs:
+      - targets: ['backend:3001']
+    metrics_path: '/metrics'
+    scrape_interval: 5s
+    scrape_timeout: 4s
+    params:
+      format: ['prometheus']
+
+  # Nginx指标
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['nginx:9113']
+    scrape_interval: 10s
+    metrics_path: '/metrics'
+
+  # PostgreSQL数据库指标
+  - job_name: 'postgres-exporter'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+    scrape_interval: 10s
+    metrics_path: '/metrics'
+
+  # Redis指标
+  - job_name: 'redis-exporter'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+    scrape_interval: 10s
+    metrics_path: '/metrics'
+
+  # Docker容器指标
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+    scrape_interval: 15s
+    metrics_path: '/metrics'
+
+  # Elasticsearch指标
+  - job_name: 'elasticsearch-exporter'
+    static_configs:
+      - targets: ['elasticsearch-exporter:9114']
+    scrape_interval: 30s
+    metrics_path: '/metrics'
+
+  # 自定义业务指标
+  - job_name: 'business-metrics'
+    static_configs:
+      - targets: ['backend:3001']
+    metrics_path: '/api/metrics'
+    scrape_interval: 10s
+    params:
+      module: ['business']
+
+  # SSL证书监控
+  - job_name: 'ssl-certificates'
+    static_configs:
+      - targets: ['nginx:443']
+    metrics_path: '/metrics'
+    scheme: https
+    scrape_interval: 300s  # 每5分钟检查一次
+    tls_config:
+      insecure_skip_verify: false
+
+# 远程写入配置（可选，用于长期存储）
+remote_write:
+  - url: "http://thanos-receive:19291/api/v1/receive"
+    queue_config:
+      max_samples_per_send: 1000
+      max_shards: 200
+      capacity: 10000
+
+# 存储配置通过命令行参数设置

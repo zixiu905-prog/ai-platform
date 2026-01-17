@@ -1,0 +1,330 @@
+.download-page {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.page-header .ant-typography {
+  margin-bottom: 8px;
+}
+
+.filter-card {
+  margin-bottom: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.software-tabs {
+  margin-bottom: 24px;
+}
+
+.software-tabs .ant-tabs-tab {
+  font-weight: 500;
+}
+
+.software-grid {
+  margin-bottom: 32px;
+}
+
+.software-card {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.software-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.software-cover {
+  position: relative;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 32px;
+  text-align: center;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.software-icon {
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 16px;
+  border: 2px solid #fff;
+}
+
+.software-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.software-cover:hover .software-actions {
+  opacity: 1;
+}
+
+.download-btn {
+  background: #52c41a;
+  border-color: #52c41a;
+  border-radius: 20px;
+  font-weight: 500;
+  min-width: 80px;
+}
+
+.download-btn:hover {
+  background: #73d13d;
+  border-color: #73d13d;
+}
+
+.info-btn {
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.9);
+  color: #333;
+}
+
+.info-btn:hover {
+  background: #fff;
+  color: #1890ff;
+  border-color: #1890ff;
+}
+
+.ant-card-body {
+  padding: 20px;
+}
+
+.software-name {
+  font-weight: 600;
+  font-size: 16px;
+  color: #262626;
+}
+
+.software-description {
+  margin-bottom: 12px;
+  line-height: 1.5;
+  color: #595959;
+}
+
+.software-meta {
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.download-progress {
+  margin-top: 8px;
+}
+
+.platform-icon {
+  font-size: 16px;
+}
+
+.platform-icon.windows {
+  color: #0078d4;
+}
+
+.platform-icon.mac {
+  color: #555555;
+}
+
+.platform-icon.linux {
+  color: #fcc624;
+}
+
+.empty-alert {
+  margin: 32px 0;
+  text-align: center;
+}
+
+.version-modal .ant-modal-body {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.version-modal .ant-descriptions-item-label {
+  font-weight: 500;
+  width: 120px;
+}
+
+.version-modal .ant-list-item {
+  padding: 16px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.version-modal .ant-list-item:last-child {
+  border-bottom: none;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .download-page {
+    padding: 16px;
+  }
+  
+  .software-cover {
+    padding: 24px;
+    min-height: 140px;
+  }
+  
+  .software-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .download-btn,
+  .info-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .software-cover {
+    padding: 20px;
+    min-height: 120px;
+  }
+  
+  .software-icon {
+    width: 48px !important;
+    height: 48px !important;
+  }
+  
+  .ant-card-body {
+    padding: 16px;
+  }
+}
+
+/* 动画效果 */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.software-card {
+  animation: slideInUp 0.6s ease-out;
+}
+
+.software-card:nth-child(1) { animation-delay: 0.1s; }
+.software-card:nth-child(2) { animation-delay: 0.2s; }
+.software-card:nth-child(3) { animation-delay: 0.3s; }
+.software-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* 特殊标签样式 */
+.ant-tag {
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* 下载状态样式 */
+.downloading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  z-index: 1;
+}
+
+.downloading-text {
+  margin-top: 8px;
+  font-weight: 500;
+  color: #52c41a;
+}
+
+/* 推荐和热门标签 */
+.recommended-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+}
+
+.hot-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: linear-gradient(135deg, #ff4757, #ff3742);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(255, 71, 87, 0.3);
+}
+
+/* 平台图标悬浮效果 */
+.platform-icon {
+  transition: all 0.2s ease;
+}
+
+.platform-icon:hover {
+  transform: scale(1.2);
+}
+
+/* 按钮组样式 */
+.button-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.button-group .ant-btn {
+  border-radius: 20px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.button-group .ant-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 滚动条样式 */
+.version-modal .ant-modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.version-modal .ant-modal-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.version-modal .ant-modal-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.version-modal .ant-modal-body::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

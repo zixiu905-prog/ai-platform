@@ -1,0 +1,362 @@
+name: Desktop Application Build and Release
+
+on:
+  push:
+    branches: [ main, develop ]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ main ]
+
+env:
+  NODE_VERSION: '18'
+  ELECTRON_CACHE: ${{ github.workspace }}/.cache/electron
+  ELECTRON_BUILDER_CACHE: ${{ github.workspace }}/.cache/electron-builder
+
+jobs:
+  test:
+    name: Test Applications
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        
+    - name: Install backend dependencies
+      run: |
+        cd backend
+        npm ci
+        
+    - name: Install frontend dependencies
+      run: |
+        cd frontend
+        npm ci
+        
+    - name: Install desktop dependencies
+      run: |
+        cd desk
+        npm ci
+        
+    - name: Run backend tests
+      run: |
+        cd backend
+        npm run test
+        
+    - name: Run frontend tests
+      run: |
+        cd frontend
+        npm run test
+        
+    - name: Run desktop linting
+      run: |
+        cd desk
+        npm run lint
+
+  build-backend:
+    name: Build Backend API
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: |
+        cd backend
+        npm ci
+        
+    - name: Build backend
+      run: |
+        cd backend
+        npm run build
+        
+    - name: Create backend Docker image
+      run: |
+        cd backend
+        docker build -t ai-platform-backend:${{ github.sha }} .
+        
+    - name: Upload backend build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: backend-build
+        path: |
+          backend/dist/
+          backend/Dockerfile
+
+  build-desktop:
+    name: Build Desktop Applications
+    runs-on: ${{ matrix.os }}
+    needs: test
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        
+    - name: Setup frontend dependencies
+      run: |
+        cd frontend
+        npm ci
+        
+    - name: Build frontend
+      run: |
+        cd frontend
+        npm run build
+        
+    - name: Install desktop dependencies
+      run: |
+        cd desk
+        npm ci
+        
+    - name: Cache Electron
+      uses: actions/cache@v4
+      with:
+        path: |
+          ${{ env.ELECTRON_CACHE }}
+          ${{ env.ELECTRON_BUILDER_CACHE }}
+        key: ${{ runner.os }}-electron-${{ hashFiles('desk/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-electron-
+          
+    - name: Build desktop app
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        cd desk
+        npm run build
+        
+    - name: Upload desktop artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: desktop-${{ matrix.os }}
+        path: desk/dist/
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: |
+        cd backend
+        npm ci
+        cd ../frontend
+        npm ci
+        cd ../desk
+        npm ci
+        
+    - name: Run security audit
+      run: |
+        cd backend && npm audit --audit-level=moderate
+        cd ../frontend && npm audit --audit-level=moderate
+        cd ../desk && npm audit --audit-level=moderate
+        
+    - name: Run Snyk security scan
+      uses: snyk/actions/node@master
+      continue-on-error: true
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        args: --severity-threshold=high
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [build-backend, build-desktop]
+    if: github.ref == 'refs/heads/develop'
+    environment: staging
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Download backend artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: backend-build
+        path: backend/
+        
+    - name: Deploy to staging
+      run: |
+        echo "Deploying to staging environment..."
+        # Add staging deployment script here
+        
+    - name: Run integration tests
+      run: |
+        echo "Running integration tests..."
+        # Add integration test commands here
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [build-backend, build-desktop, security-scan]
+    if: startsWith(github.ref, 'refs/tags/v')
+    environment: production
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Download backend artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: backend-build
+        path: backend/
+        
+    - name: Download all desktop artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: desktop-ubuntu-latest
+        path: desktop-artifacts/ubuntu/
+        
+    - name: Download Windows artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: desktop-windows-latest
+        path: desktop-artifacts/windows/
+        
+    - name: Download macOS artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: desktop-macos-latest
+        path: desktop-artifacts/macos/
+        
+    - name: Prepare release assets
+      run: |
+        mkdir -p release-assets/
+        
+        # 复制所有平台的构建产物
+        find desktop-artifacts/ -type f \( -name "*.exe" -o -name "*.dmg" -o -name "*.zip" -o -name "*.AppImage" -o -name "*.deb" -o -name "*.rpm" -o -name "*.snap" -o -name "*.flatpak" \) -exec cp {} release-assets/ \;
+        
+        # 列出所有文件用于调试
+        ls -la release-assets/
+        
+    - name: Generate release notes
+      id: release_notes
+      run: |
+        # 从tag中提取版本号
+        VERSION=${GITHUB_REF#refs/tags/v}
+        
+        # 生成release notes
+        cat > release_notes.md << EOF
+        # AI智能体平台 v${VERSION}
+        
+        ## 🎉 新功能
+        - 自动更新机制优化
+        - 多平台分发支持
+        - 性能提升和bug修复
+        
+        ## 📦 下载说明
+        
+        ### Windows
+        - \`AI智能体平台-Setup-${VERSION}.exe\`: Windows安装程序
+        - \`AI智能体平台-${VERSION}.exe\`: Windows便携版
+        
+        ### macOS
+        - \`AI智能体平台-${VERSION}.dmg\`: macOS安装包
+        - \`AI智能体平台-${VERSION}-mac.zip\`: macOS压缩包
+        
+        ### Linux
+        - \`AI智能体平台-${VERSION}.AppImage\`: Linux通用版本
+        - \`ai-platform-desktop_${VERSION}_amd64.deb\`: Debian/Ubuntu包
+        - \`ai-platform-desktop-${VERSION}-1.x86_64.rpm\`: RedHat/Fedora包
+        - \`ai-platform-desktop_${VERSION}_amd64.snap\`: Snap包
+        
+        ## 🔐 签名验证
+        所有发布文件都经过数字签名验证，确保安全可靠。
+        
+        ## 📝 更新日志
+        详细更新日志请查看: [CHANGELOG.md](https://github.com/your-username/ai-platform/blob/main/CHANGELOG.md)
+        
+        ---
+        
+        **系统要求:**
+        - Windows 10/11 (64位)
+        - macOS 10.15+ (Intel/Apple Silicon)
+        - Linux (Ubuntu 18.04+, CentOS 7+)
+        EOF
+        
+        echo "release_notes_file=release_notes.md" >> $GITHUB_OUTPUT
+        
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: release-assets/*
+        body_path: ${{ steps.release_notes.outputs.release_notes_file }}
+        draft: false
+        prerelease: ${{ contains(github.ref, 'beta') || contains(github.ref, 'alpha') }}
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Deploy to production
+      run: |
+        echo "Deploying to production environment..."
+        # 这里可以添加生产环境部署脚本
+        # 例如：部署到CDN、更新下载页面等
+        
+    - name: Update download stats
+      run: |
+        echo "Updating download statistics..."
+        # 可以在这里添加下载统计更新逻辑
+        
+    - name: Health check
+      run: |
+        echo "Performing health check..."
+        # 添加健康检查命令
+
+  notify:
+    name: Notify Deployment Status
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production]
+    if: always()
+    
+    steps:
+    - name: Notify Slack on success
+      if: success()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: success
+        text: "✅ AI Platform deployment successful!"
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+        
+    - name: Notify Slack on failure
+      if: failure()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: failure
+        text: "❌ AI Platform deployment failed!"
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}

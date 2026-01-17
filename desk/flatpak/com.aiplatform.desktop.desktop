@@ -1,0 +1,34 @@
+[Desktop Entry]
+Name=AI智能体平台
+Name[en]=AI Platform
+Comment=AI驱动的智能开发平台
+Comment[en]=AI-powered intelligent development platform
+GenericName=Development Platform
+GenericName[en]=Development Platform
+Exec=ai-platform-desktop %U
+Icon=com.aiplatform.desktop
+Type=Application
+Categories=Development;IDE;GTK;
+Keywords=AI;development;platform;intelligent;code;programming;collaboration;
+MimeType=text/plain;text/html;text/css;text/javascript;text/json;text/xml;application/json;x-scheme-handler/aiproj;
+StartupNotify=true
+StartupWMClass=ai-platform-desktop
+Actions=new-project;open-file;preferences;
+
+[Desktop Action new-project]
+Name=新建项目
+Name[en]=New Project
+Exec=ai-platform-desktop --new-project
+Icon=document-new
+
+[Desktop Action open-file]
+Name=打开文件
+Name[en]=Open File
+Exec=ai-platform-desktop --open-file
+Icon=document-open
+
+[Desktop Action preferences]
+Name=偏好设置
+Name[en]=Preferences
+Exec=ai-platform-desktop --preferences
+Icon=preferences-system

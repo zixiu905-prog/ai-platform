@@ -1,0 +1,607 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ai_models {
+  id           String      @id
+  name         String      @unique
+  type         AIModelType
+  apiKey       String
+  modelConfig  Json
+  isActive     Boolean     @default(true)
+  maxTokens    Int         @default(4096)
+  costPerToken Float       @default(0.0001)
+  totalTokens  BigInt      @default(0)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime
+}
+
+model audit_logs {
+  id        String   @id
+  userId    String?
+  action    String
+  resource  String
+  details   Json?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+}
+
+model tenants {
+  id           String   @id
+  name         String
+  domain       String   @unique
+  subdomain    String?
+  adminUserId  String?
+  settings     Json     @default("{}")
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([domain])
+  @@index([adminUserId])
+}
+
+model enterprise_audit_log {
+  id           String   @id
+  enterpriseId  String
+  userId       String
+  action       String
+  resource     String
+  details      Json?
+  ipAddress    String?
+  userAgent    String?
+  timestamp    DateTime @default(now())
+
+  @@index([enterpriseId])
+  @@index([userId])
+  @@index([timestamp])
+}
+
+model payment_records {
+  id              String           @id
+  userId          String
+  amount          Float
+  currency        String           @default("CNY")
+  method          PaymentMethod
+  status          PaymentStatus    @default(PENDING)
+  description     String?
+  transactionId   String?          @unique
+  planId          String?
+  metadata        Json?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime
+  user            users              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([transactionId])
+}
+
+model invoices {
+  id              String   @id @default(cuid())
+  userId          String
+  amount          Float
+  currency        String           @default("CNY")
+  status          String           @default("PENDING")
+  invoiceNumber   String   @unique
+  dueDate         DateTime?
+  paidAt          DateTime?
+  items           Json?
+  metadata        Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime
+  user            users              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([invoiceNumber])
+}
+
+model usage_records {
+  id              String   @id @default(cuid())
+  userId          String
+  subscriptionId   String?
+  resourceType    String
+  resourceId      String?
+  quantity        Int       @default(0)
+  unit            String    @default("count")
+  cost            Float     @default(0)
+  metadata        Json?
+  createdAt       DateTime @default(now())
+  user            users              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([subscriptionId])
+  @@index([resourceType])
+  @@index([createdAt])
+}
+
+model chat_messages {
+  id             String        @id
+  conversationId String
+  role           MessageRole   @default(USER)
+  content        String        @default("")
+  model          String?
+  status         MessageStatus @default(SENT)
+  tokens         Int?
+  cost           Float?
+  latency        Int?
+  metadata       Json?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime
+  conversations  conversations @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}
+
+model conversations {
+  id            String          @id
+  userId        String
+  title         String
+  model         String          @default("glm-4")
+  settings      Json?
+  isActive      Boolean         @default(true)
+  messageCount  Int             @default(0)
+  totalTokens   BigInt          @default(0)
+  totalCost     Float           @default(0)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime
+  chat_messages chat_messages[]
+  users         users           @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model payments {
+  id            String        @id
+  userId        String
+  planId        String?
+  outTradeNo    String?       @unique
+  amount        Float
+  currency      String        @default("CNY")
+  method        PaymentMethod
+  status        PaymentStatus @default(PENDING)
+  description   String?
+  transactionId String?       @unique
+  paymentUrl    String?
+  notifyData    Json?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  users         users         @relation(fields: [userId], references: [id])
+}
+
+model scripts {
+  id              String            @id
+  name            String
+  description     String?
+  softwareId      String
+  category        String
+  content         String
+  parameters      Json?
+  isActive        Boolean           @default(true)
+  isPublic        Boolean           @default(false)
+  version         String            @default("1.0.0")
+  authorId        String
+  downloads       Int               @default(0)
+  rating          Float             @default(0)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime
+  users           users             @relation(fields: [authorId], references: [id])
+  software_apis   software_apis     @relation(fields: [softwareId], references: [id])
+  project_scripts project_scripts[]
+}
+
+model software_apis {
+  id             String           @id
+  softwareName   String           @unique
+  category       SoftwareCategory
+  versions       Json
+  apiConfig      Json
+  comConfig      Json?
+  toolsConfig    Json?
+  isActive       Boolean          @default(true)
+  autoUpdate     Boolean          @default(true)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime
+  scripts        scripts[]
+  user_softwares user_softwares[]
+}
+
+model subscriptions {
+  id             String           @id @default(cuid())
+  userId         String
+  planId         String?
+  planType       SubscriptionPlan
+  price          Float
+  currency       String           @default("CNY")
+  duration       Int
+  features       Json
+  isActive       Boolean          @default(true)
+  status         String           @default("ACTIVE")
+  startDate      DateTime         @default(now())
+  endDate        DateTime
+  autoRenew     Boolean          @default(false)
+  cancelReason   String?
+  cancelFeedback String?
+  cancelledAt    DateTime?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  users          users            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([planId])
+  @@index([status])
+}
+
+model system_configs {
+  id        String   @id
+  key       String   @unique
+  value     Json
+  category  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
+model system_messages {
+  id        String      @id
+  userId    String
+  title     String
+  content   String
+  type      MessageType @default(NOTIFICATION)
+  isRead    Boolean     @default(false)
+  data      Json?
+  createdAt DateTime    @default(now())
+  users     users       @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model task_executions {
+  id          String     @id
+  userId      String
+  workflowId  String?
+  scriptId    String?
+  softwareId  String?
+  input       Json
+  output      Json?
+  status      TaskStatus @default(PENDING)
+  progress    Float      @default(0)
+  error       String?
+  startedAt   DateTime?
+  completedAt DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime
+  users       users      @relation(fields: [userId], references: [id])
+}
+
+model user_softwares {
+  id            String        @id
+  userId        String
+  softwareId    String
+  version       String
+  installPath   String?
+  isActive      Boolean       @default(true)
+  lastScanned   DateTime      @default(now())
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime
+  software_apis software_apis @relation(fields: [softwareId], references: [id])
+  users         users         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, softwareId])
+}
+
+model sessions {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  users     users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([userId])
+}
+
+model users {
+  id                  String                  @id
+  email               String                  @unique
+  username            String                  @unique
+  password            String
+  name                String?
+  avatar              String?
+  phone               String?
+  wechatId            String?                 @unique
+  isActive            Boolean                 @default(true)
+  isPaid              Boolean                 @default(false)
+  tokenBalance        Float                   @default(0)
+  emailVerified       Boolean                 @default(false)
+  role                Role                    @default(USER)
+  lastLoginAt         DateTime?
+  createdAt           DateTime                @default(now())
+  updatedAt           DateTime
+  conversations       conversations[]
+  payments            payments[]
+  scripts             scripts[]
+  subscriptions       subscriptions[]
+  system_messages     system_messages[]
+  task_executions     task_executions[]
+  user_softwares      user_softwares[]
+  workflows           workflows[]
+  passwordResetTokens password_reset_tokens[]
+  projects            projects[]
+  recommendations     recommendations[]
+  documents           documents[]
+  sessions            sessions[]
+  project_activities  project_activities[]
+  paymentRecords     payment_records[]
+  invoices           invoices[]
+  usageRecords       usage_records[]
+}
+
+model password_reset_tokens {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  users users @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([userId])
+}
+
+model workflows {
+  id                String              @id
+  name              String
+  description       String?
+  nodes             Json
+  edges             Json
+  config            Json
+  isActive          Boolean             @default(true)
+  isPublic          Boolean             @default(false)
+  category          String?
+  tags              String[]
+  authorId          String
+  uses              Int                 @default(0)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime
+  users             users               @relation(fields: [authorId], references: [id])
+  project_workflows project_workflows[]
+}
+
+enum AIModelType {
+  ZHIPU
+  DOUBAO
+  GPT
+  CLAUDE
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+enum MessageStatus {
+  SENDING
+  SENT
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum MessageType {
+  NOTIFICATION
+  ALERT
+  SYSTEM
+  PAYMENT_REMINDER
+  SOFTWARE_UPDATE
+  WORKFLOW_COMPLETE
+  TASK_FAILED
+}
+
+enum PaymentMethod {
+  WECHAT_PAY
+  ALIPAY
+  BANK_CARD
+  CREDIT_CARD
+  PAYPAL
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+enum Role {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum SoftwareCategory {
+  DESIGN_2D
+  DESIGN_3D
+  VIDEO_EDITING
+  PHOTO_EDITING
+  ILLUSTRATION
+  CAD
+  RENDERING
+}
+
+enum SubscriptionPlan {
+  FREE
+  BASIC
+  PROFESSIONAL
+  ENTERPRISE
+}
+
+enum TaskStatus {
+  PENDING
+  RUNNING
+  PAUSED
+  COMPLETED
+  FAILED
+  CANCELLED
+  TIMEOUT
+}
+
+enum ProjectStatus {
+  ACTIVE
+  ARCHIVED
+  DELETED
+  COMPLETED
+}
+
+enum RecommendationType {
+  WORKFLOW
+  SCRIPT
+  SOFTWARE
+  TEMPLATE
+  FEATURE
+}
+
+enum AssetType {
+  IMAGE
+  VIDEO
+  AUDIO
+  DOCUMENT
+  OTHER
+}
+
+enum DocumentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  DELETED
+}
+
+model projects {
+  id          String        @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  status      ProjectStatus @default(ACTIVE)
+  metadata    Json?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  user       users                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activities project_activities[]
+  workflows  project_workflows[]
+  scripts    project_scripts[]
+  assets     project_assets[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model recommendations {
+  id          String             @id @default(cuid())
+  userId      String
+  type        RecommendationType
+  title       String
+  description String
+  data        Json?
+  isRead      Boolean            @default(false)
+  createdAt   DateTime           @default(now())
+
+  user users @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([type])
+}
+
+model project_activities {
+  id        String   @id @default(cuid())
+  projectId String
+  userId    String
+  action    String
+  details   Json?
+  createdAt DateTime @default(now())
+
+  project projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    users    @relation(fields: [userId], references: [id])
+
+  @@index([projectId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model project_workflows {
+  id         String   @id @default(cuid())
+  projectId  String
+  workflowId String
+  name       String?
+  createdAt  DateTime @default(now())
+
+  project  projects  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  workflow workflows @relation(fields: [workflowId], references: [id])
+
+  @@unique([projectId, workflowId])
+  @@index([projectId])
+  @@index([workflowId])
+}
+
+model project_scripts {
+  id        String   @id @default(cuid())
+  projectId String
+  scriptId  String
+  name      String?
+  createdAt DateTime @default(now())
+
+  project projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  script  scripts  @relation(fields: [scriptId], references: [id])
+
+  @@unique([projectId, scriptId])
+  @@index([projectId])
+  @@index([scriptId])
+}
+
+model project_assets {
+  id        String    @id @default(cuid())
+  projectId String
+  type      AssetType
+  name      String
+  path      String
+  size      Int
+  metadata  Json?
+  createdAt DateTime  @default(now())
+
+  project projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([type])
+}
+
+model documents {
+  id          String         @id @default(cuid())
+  userId      String
+  title       String
+  content     String         @default("")
+  categoryId  String?
+  tags        String[]
+  isPublic    Boolean        @default(false)
+  status      DocumentStatus @default(DRAFT)
+  filePath    String?
+  fileSize    Int?
+  fileType    String?
+  parseStatus String?
+  parsedData  Json?
+  metadata    Json?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  user users @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([categoryId])
+}

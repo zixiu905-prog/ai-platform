@@ -1,0 +1,740 @@
+.multimodal-interface {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.interface-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.interface-header h3 {
+  margin-bottom: 8px !important;
+  color: #333;
+  font-weight: 600;
+}
+
+.input-section {
+  min-height: 400px;
+}
+
+.tab-selector {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.tab-selector .ant-btn {
+  border-radius: 20px;
+  padding: 8px 24px;
+  height: auto;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.tab-selector .ant-btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+}
+
+.tab-selector .ant-btn-primary:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.tab-selector .ant-btn-default {
+  background: white;
+  border: 1px solid #e1e8ed;
+  color: #666;
+}
+
+.tab-selector .ant-btn-default:hover {
+  border-color: #667eea;
+  color: #667eea;
+}
+
+.processing-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.processing-content {
+  text-align: center;
+  padding: 48px;
+}
+
+.processing-content h4 {
+  margin-top: 24px !important;
+  margin-bottom: 16px !important;
+  color: #333;
+}
+
+.processing-content .ant-typography {
+  margin-bottom: 24px !important;
+  color: #666;
+}
+
+.processing-content .ant-space {
+  justify-content: center;
+}
+
+.result-section {
+  min-height: 300px;
+}
+
+.result-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e1e8ed;
+}
+
+.result-actions .ant-btn {
+  border-radius: 8px;
+  height: 40px;
+  padding: 0 24px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.result-actions .ant-btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+}
+
+.result-actions .ant-btn-primary:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.result-actions .ant-btn:not(.ant-btn-primary):hover {
+  border-color: #667eea;
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+}
+
+/* 统计数字样式 */
+.ant-statistic {
+  text-align: center;
+}
+
+.ant-statistic-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.ant-statistic-content {
+  font-weight: 600;
+}
+
+.ant-statistic-content-value {
+  font-weight: 700;
+}
+
+/* 描述列表样式 */
+.ant-descriptions {
+  margin-top: 24px;
+}
+
+.ant-descriptions-item-label {
+  font-weight: 500;
+  color: #666;
+  background: #fafafa;
+}
+
+.ant-descriptions-item-content {
+  font-weight: 400;
+  color: #333;
+}
+
+/* 处理历史列表 */
+.ant-list-item-meta-avatar {
+  margin-right: 16px;
+}
+
+.ant-list-item-meta-title {
+  margin-bottom: 4px;
+}
+
+.ant-list-item-meta-description {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.ant-list-item-action {
+  margin-left: 16px;
+}
+
+.ant-list-item-action li {
+  padding: 0 4px;
+}
+
+.ant-list-item-action .ant-btn {
+  border: none;
+  background: transparent;
+  color: #666;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.ant-list-item-action .ant-btn:hover {
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+}
+
+.ant-list-item-action .ant-btn-dangerous:hover {
+  background: rgba(255, 77, 79, 0.1);
+  color: #ff4d4f;
+}
+
+/* 详情预览模态框 */
+.detail-preview {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.detail-preview::-webkit-scrollbar {
+  width: 6px;
+}
+
+.detail-preview::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.detail-preview::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.detail-preview::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.detail-preview .ant-descriptions {
+  margin-bottom: 24px;
+}
+
+.detail-preview pre {
+  background: #f8fafc;
+  border: 1px solid #e1e8ed;
+  border-radius: 8px;
+  padding: 16px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* 步骤条样式 */
+.ant-steps {
+  margin-bottom: 32px;
+}
+
+.ant-steps-item-finish .ant-steps-item-icon {
+  background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+  border-color: #52c41a;
+}
+
+.ant-steps-item-process .ant-steps-item-icon {
+  background: linear-gradient(135deg, #1890ff 0%, #40a9ff 100%);
+  border-color: #1890ff;
+}
+
+.ant-steps-item-wait .ant-steps-item-icon {
+  background: #f5f5f5;
+  border-color: #d9d9d9;
+}
+
+.ant-steps-item-finish .ant-steps-item-title {
+  color: #52c41a;
+}
+
+.ant-steps-item-process .ant-steps-item-title {
+  color: #1890ff;
+  font-weight: 500;
+}
+
+/* 标签样式 */
+.ant-tag {
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  border: none;
+  padding: 2px 10px;
+}
+
+.ant-tag-blue {
+  background: linear-gradient(135deg, #e6f7ff 0%, #bae7ff 100%);
+  color: #1890ff;
+}
+
+.ant-tag-green {
+  background: linear-gradient(135deg, #f6ffed 0%, #d9f7be 100%);
+  color: #52c41a;
+}
+
+.ant-tag-orange {
+  background: linear-gradient(135deg, #fff7e6 0%, #ffd591 100%);
+  color: #fa8c16;
+}
+
+.ant-tag-purple {
+  background: linear-gradient(135deg, #f9f0ff 0%, #efdbff 100%);
+  color: #722ed1;
+}
+
+.ant-tag-processing {
+  background: linear-gradient(135deg, #e6f7ff 0%, #bae7ff 100%);
+  color: #1890ff;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.ant-tag-success {
+  background: linear-gradient(135deg, #f6ffed 0%, #d9f7be 100%);
+  color: #52c41a;
+}
+
+.ant-tag-error {
+  background: linear-gradient(135deg, #fff2f0 0%, #ffccc7 100%);
+  color: #ff4d4f;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* 输入操作区域 */
+.input-actions {
+  display: flex;
+  justify-content: center;
+  padding: 32px 0;
+  margin-top: 24px;
+  border-top: 1px solid #e1e8ed;
+}
+
+.input-actions .ant-btn {
+  border-radius: 25px;
+  height: 50px;
+  padding: 0 32px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin: 0 8px;
+}
+
+.input-actions .ant-btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.input-actions .ant-btn-primary:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.input-actions .ant-btn:not(.ant-btn-primary) {
+  background: white;
+  border: 2px solid #e1e8ed;
+  color: #666;
+}
+
+.input-actions .ant-btn:not(.ant-btn-primary):hover {
+  border-color: #667eea;
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.05);
+}
+
+/* 卡片样式 */
+.ant-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: none;
+  overflow: hidden;
+}
+
+.ant-card-head {
+  background: linear-gradient(135deg, #f8fafc 0%, #e1e8ed 100%);
+  border-bottom: 1px solid #e1e8ed;
+}
+
+.ant-card-head-title {
+  font-weight: 600;
+  color: #333;
+}
+
+.ant-card-body {
+  padding: 24px;
+}
+
+.ant-card-small > .ant-card-body {
+  padding: 16px;
+}
+
+/* 进度条样式 */
+.ant-progress-line {
+  display: inline-block;
+  width: 100px;
+}
+
+.ant-progress-bg {
+  height: 6px !important;
+  border-radius: 3px !important;
+}
+
+.ant-progress-success-bg {
+  height: 6px !important;
+  border-radius: 3px !important;
+}
+
+/* 警告框样式 */
+.ant-alert {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ant-alert-success {
+  background: linear-gradient(135deg, #f6ffed 0%, #d9f7be 100%);
+}
+
+.ant-alert-error {
+  background: linear-gradient(135deg, #fff2f0 0%, #ffccc7 100%);
+}
+
+.ant-alert-warning {
+  background: linear-gradient(135deg, #fffbe6 0%, #fff1b8 100%);
+}
+
+.ant-alert-info {
+  background: linear-gradient(135deg, #e6f7ff 0%, #bae7ff 100%);
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+  .multimodal-interface {
+    padding: 16px;
+  }
+  
+  .interface-header {
+    margin-bottom: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .multimodal-interface {
+    padding: 12px;
+  }
+  
+  .interface-header {
+    margin-bottom: 16px;
+  }
+  
+  .interface-header h3 {
+    font-size: 20px;
+  }
+  
+  .tab-selector {
+    margin-bottom: 16px;
+  }
+  
+  .tab-selector .ant-btn {
+    padding: 6px 16px;
+    font-size: 14px;
+  }
+  
+  .processing-content {
+    padding: 24px;
+  }
+  
+  .result-actions {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .input-actions {
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 0;
+  }
+  
+  .input-actions .ant-btn {
+    width: 200px;
+    margin: 4px 0;
+  }
+  
+  .ant-statistic {
+    margin-bottom: 16px;
+  }
+  
+  .ant-descriptions {
+    margin-top: 16px;
+  }
+  
+  .ant-steps {
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .multimodal-interface {
+    padding: 8px;
+  }
+  
+  .processing-content {
+    padding: 16px;
+  }
+  
+  .processing-content h4 {
+    font-size: 16px;
+  }
+  
+  .interface-header h3 {
+    font-size: 18px;
+  }
+  
+  .tab-selector .ant-btn {
+    padding: 4px 12px;
+    font-size: 12px;
+  }
+  
+  .input-actions .ant-btn {
+    width: 180px;
+    height: 45px;
+    font-size: 14px;
+  }
+  
+  .result-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .result-actions .ant-btn {
+    width: 100%;
+    height: 40px;
+    font-size: 14px;
+  }
+  
+  .ant-card-body {
+    padding: 16px;
+  }
+  
+  .detail-preview {
+    max-height: 60vh;
+  }
+}
+
+/* 暗色主题 */
+@media (prefers-color-scheme: dark) {
+  .multimodal-interface {
+    background: transparent;
+  }
+  
+  .interface-header h3 {
+    color: white;
+  }
+  
+  .interface-header .ant-typography {
+    color: #ccc;
+  }
+  
+  .tab-selector .ant-btn-default {
+    background: #1f1f1f;
+    border-color: #434343;
+    color: #ccc;
+  }
+  
+  .tab-selector .ant-btn-default:hover {
+    border-color: #667eea;
+    color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+  }
+  
+  .processing-section {
+    background: rgba(102, 126, 234, 0.1);
+    border-color: rgba(102, 126, 234, 0.3);
+  }
+  
+  .processing-content h4 {
+    color: white;
+  }
+  
+  .processing-content .ant-typography {
+    color: #ccc;
+  }
+  
+  .result-section {
+    color: white;
+  }
+  
+  .result-actions {
+    border-top-color: #434343;
+  }
+  
+  .ant-statistic-title {
+    color: #ccc;
+  }
+  
+  .ant-statistic-content {
+    color: white;
+  }
+  
+  .ant-descriptions-item-label {
+    background: #2a2a2a;
+    color: #ccc;
+  }
+  
+  .ant-descriptions-item-content {
+    color: white;
+  }
+  
+  .ant-card {
+    background: #1f1f1f;
+  }
+  
+  .ant-card-head {
+    background: #2a2a2a;
+    border-bottom-color: #434343;
+  }
+  
+  .ant-card-head-title {
+    color: white;
+  }
+  
+  .ant-list-item-meta-title {
+    color: white;
+  }
+  
+  .ant-list-item-meta-description {
+    color: #999;
+  }
+  
+  .ant-list-item-action .ant-btn {
+    color: #ccc;
+  }
+  
+  .ant-list-item-action .ant-btn:hover {
+    color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+  }
+  
+  .ant-list-item-action .ant-btn-dangerous:hover {
+    color: #ff4d4f;
+    background: rgba(255, 77, 79, 0.1);
+  }
+  
+  .detail-preview pre {
+    background: #2a2a2a;
+    border-color: #434343;
+    color: #ccc;
+  }
+  
+  .input-actions {
+    border-top-color: #434343;
+  }
+  
+  .input-actions .ant-btn:not(.ant-btn-primary) {
+    background: #1f1f1f;
+    border-color: #434343;
+    color: #ccc;
+  }
+  
+  .input-actions .ant-btn:not(.ant-btn-primary):hover {
+    border-color: #667eea;
+    color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+  }
+  
+  .ant-steps-item-finish .ant-steps-item-title {
+    color: #52c41a;
+  }
+  
+  .ant-steps-item-process .ant-steps-item-title {
+    color: #1890ff;
+  }
+  
+  .ant-steps-item-wait .ant-steps-item-title {
+    color: #666;
+  }
+}
+
+/* 加载动画 */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.input-section,
+.processing-section,
+.result-section {
+  animation: slideInUp 0.5s ease-out;
+}
+
+/* 微交互动画 */
+.ant-btn {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ant-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ant-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.ant-tag {
+  transition: all 0.2s ease;
+}
+
+.ant-tag:hover {
+  transform: scale(1.05);
+}
+
+/* 自定义滚动条 */
+.multimodal-interface::-webkit-scrollbar,
+.detail-preview::-webkit-scrollbar {
+  width: 8px;
+}
+
+.multimodal-interface::-webkit-scrollbar-track,
+.detail-preview::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.multimodal-interface::-webkit-scrollbar-thumb,
+.detail-preview::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.multimodal-interface::-webkit-scrollbar-thumb:hover,
+.detail-preview::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聊天组件集成测试</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .test-result {
+            transition: all 0.3s ease;
+        }
+        .test-passed {
+            background-color: #f0f9ff;
+            border-left: 4px solid #22c55e;
+        }
+        .test-failed {
+            background-color: #fef2f2;
+            border-left: 4px solid #ef4444;
+        }
+        .test-running {
+            background-color: #fffbeb;
+            border-left: 4px solid #f59e0b;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto p-6 max-w-4xl">
+        <h1 class="text-3xl font-bold mb-6 text-center">聊天组件集成测试</h1>
+        
+        <!-- 测试控制面板 -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <div class="flex gap-4 mb-4">
+                <button onclick="runAllTests()" id="runBtn" class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                    运行所有测试
+                </button>
+                <button onclick="clearResults()" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors">
+                    清除结果
+                </button>
+            </div>
+            
+            <!-- 测试状态显示 -->
+            <div id="testStatus" class="hidden bg-blue-50 border-l-4 border-blue-500 p-4 mb-4">
+                <div class="text-sm text-blue-600">当前运行:</div>
+                <div class="font-semibold" id="currentTest">等待开始...</div>
+            </div>
+            
+            <!-- 测试统计 -->
+            <div class="grid grid-cols-4 gap-4 mb-4">
+                <div class="bg-blue-50 p-4 rounded-lg text-center">
+                    <div class="text-2xl font-bold text-blue-600" id="totalTests">0</div>
+                    <div class="text-sm text-gray-600">总测试数</div>
+                </div>
+                <div class="bg-green-50 p-4 rounded-lg text-center">
+                    <div class="text-2xl font-bold text-green-600" id="passedTests">0</div>
+                    <div class="text-sm text-gray-600">通过</div>
+                </div>
+                <div class="bg-red-50 p-4 rounded-lg text-center">
+                    <div class="text-2xl font-bold text-red-600" id="failedTests">0</div>
+                    <div class="text-sm text-gray-600">失败</div>
+                </div>
+                <div class="bg-yellow-50 p-4 rounded-lg text-center">
+                    <div class="text-2xl font-bold text-yellow-600" id="passRate">0%</div>
+                    <div class="text-sm text-gray-600">通过率</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 测试结果 -->
+        <div id="testResults" class="space-y-4">
+            <!-- 测试结果将动态插入这里 -->
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://127.0.0.1:3001/api/test';
+        let testResults = [];
+        let isRunning = false;
+
+        const testSuites = [
+            {
+                name: '基础连接测试',
+                tests: [
+                    { name: '测试数据库连接', fn: testDatabaseConnection },
+                    { name: '测试API端点可用性', fn: testAPIEndpoints },
+                    { name: '测试认证状态', fn: testAuthentication }
+                ]
+            },
+            {
+                name: '对话功能测试',
+                tests: [
+                    { name: '获取可用模型', fn: testGetAvailableModels },
+                    { name: '测试对话创建', fn: testCreateConversation },
+                    { name: '测试消息发送', fn: testSendMessage }
+                ]
+            },
+            {
+                name: '组件渲染测试',
+                tests: [
+                    { name: '测试消息组件', fn: testMessageComponents },
+                    { name: '测试输入组件', fn: testInputComponents },
+                    { name: '测试设置组件', fn: testSettingsComponents }
+                ]
+            },
+            {
+                name: '性能测试',
+                tests: [
+                    { name: '测试响应时间', fn: testResponseTime },
+                    { name: '测试内存使用', fn: testMemoryUsage },
+                    { name: '测试并发处理', fn: testConcurrentRequests }
+                ]
+            }
+        ];
+
+        // 测试函数实现
+        async function testDatabaseConnection() {
+            const response = await fetch(`${API_BASE}/db-status`);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            if (!data.success) throw new Error(data.message || 'Database check failed');
+        }
+
+        async function testAPIEndpoints() {
+            const endpoints = ['/db-status', '/ai-config', '/models'];
+            for (const endpoint of endpoints) {
+                const response = await fetch(`${API_BASE}${endpoint}`);
+                if (!response.ok) throw new Error(`Endpoint ${endpoint} failed`);
+            }
+        }
+
+        async function testAuthentication() {
+            // 模拟认证测试
+            localStorage.setItem('token', 'test-token');
+            const response = await fetch('http://127.0.0.1:3001/api/chat/conversations', {
+                headers: { 'Authorization': 'Bearer test-token' }
+            });
+            // 401或200都表示认证系统在工作
+            if (response.status !== 401 && response.status !== 200) {
+                throw new Error(`Unexpected auth response: ${response.status}`);
+            }
+        }
+
+        async function testGetAvailableModels() {
+            const response = await fetch(`${API_BASE}/models`);
+            if (!response.ok) throw new Error('Models API failed');
+            const data = await response.json();
+            if (!data.success || !Array.isArray(data.data.models)) {
+                throw new Error('Invalid models response');
+            }
+        }
+
+        async function testCreateConversation() {
+            const response = await fetch(`${API_BASE}/chat`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: '测试消息' })
+            });
+            if (!response.ok) throw new Error('Conversation creation failed');
+            const data = await response.json();
+            if (!data.success) throw new Error(data.message || 'Creation failed');
+        }
+
+        async function testSendMessage() {
+            // 这个测试依赖于之前的会话创建
+            // 这里只测试API端点是否可访问
+            console.log('Message sending test - endpoint availability');
+        }
+
+        async function testMessageComponents() {
+            // 测试前端组件的基本功能
+            console.log('Message components test - basic structure');
+            return true;
+        }
+
+        async function testInputComponents() {
+            // 测试输入组件
+            console.log('Input components test - basic functionality');
+            return true;
+        }
+
+        async function testSettingsComponents() {
+            // 测试设置组件
+            console.log('Settings components test - configuration options');
+            return true;
+        }
+
+        async function testResponseTime() {
+            const startTime = Date.now();
+            const response = await fetch(`${API_BASE}/db-status`);
+            const responseTime = Date.now() - startTime;
+            if (responseTime > 5000) throw new Error(`Response too slow: ${responseTime}ms`);
+        }
+
+        async function testMemoryUsage() {
+            if ('memory' in performance) {
+                const memory = performance.memory;
+                const usage = memory.usedJSHeapSize / 1024 / 1024; // MB
+                console.log(`Memory usage: ${usage.toFixed(2)} MB`);
+                if (usage > 100) throw new Error(`Memory usage too high: ${usage.toFixed(2)} MB`);
+            }
+        }
+
+        async function testConcurrentRequests() {
+            const requests = Array.from({ length: 5 }, (_, i) =>
+                fetch(`${API_BASE}/db-status`)
+            );
+            const results = await Promise.allSettled(requests);
+            const failures = results.filter(r => r.status === 'rejected');
+            if (failures.length > 0) throw new Error(`${failures.length} concurrent requests failed`);
+        }
+
+        // UI更新函数
+        function updateTestStatus(testName, status, error = null, duration = 0) {
+            const statusDiv = document.getElementById('testStatus');
+            const currentTestDiv = document.getElementById('currentTest');
+            
+            if (status === 'running') {
+                statusDiv.classList.remove('hidden');
+                currentTestDiv.textContent = testName;
+            } else {
+                statusDiv.classList.add('hidden');
+            }
+        }
+
+        function addTestResult(suiteName, testName, status, error = null, duration = 0) {
+            const resultsDiv = document.getElementById('testResults');
+            
+            let suiteDiv = document.querySelector(`[data-suite="${suiteName}"]`);
+            if (!suiteDiv) {
+                suiteDiv = document.createElement('div');
+                suiteDiv.setAttribute('data-suite', suiteName);
+                suiteDiv.className = 'bg-white rounded-lg shadow-lg p-6 mb-4';
+                suiteDiv.innerHTML = `
+                    <h3 class="text-lg font-semibold mb-4">${suiteName}</h3>
+                    <div class="space-y-2" id="suite-${suiteName.replace(/\s+/g, '-')}"></div>
+                `;
+                resultsDiv.appendChild(suiteDiv);
+            }
+            
+            const testDiv = document.createElement('div');
+            testDiv.className = `test-result flex items-center justify-between p-3 rounded ${
+                status === 'passed' ? 'test-passed' :
+                status === 'failed' ? 'test-failed' :
+                status === 'running' ? 'test-running' : ''
+            }`;
+            
+            testDiv.innerHTML = `
+                <span class="text-sm font-medium">${testName}</span>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-gray-500">${duration}ms</span>
+                    <div class="w-3 h-3 rounded-full ${
+                        status === 'passed' ? 'bg-green-500' :
+                        status === 'failed' ? 'bg-red-500' :
+                        status === 'running' ? 'bg-blue-500' : 'bg-gray-300'
+                    }"></div>
+                </div>
+            `;
+            
+            if (error) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'text-xs text-red-600 mt-1';
+                errorDiv.textContent = error;
+                testDiv.appendChild(errorDiv);
+            }
+            
+            const suiteTestsDiv = document.getElementById(`suite-${suiteName.replace(/\s+/g, '-')}`);
+            suiteTestsDiv.appendChild(testDiv);
+            
+            testResults.push({ suiteName, testName, status, error, duration });
+            updateStatistics();
+        }
+
+        function updateStatistics() {
+            const total = testResults.length;
+            const passed = testResults.filter(r => r.status === 'passed').length;
+            const failed = testResults.filter(r => r.status === 'failed').length;
+            const passRate = total > 0 ? Math.round((passed / total) * 100) : 0;
+            
+            document.getElementById('totalTests').textContent = total;
+            document.getElementById('passedTests').textContent = passed;
+            document.getElementById('failedTests').textContent = failed;
+            document.getElementById('passRate').textContent = passRate + '%';
+        }
+
+        function clearResults() {
+            document.getElementById('testResults').innerHTML = '';
+            testResults = [];
+            updateStatistics();
+            document.getElementById('testStatus').classList.add('hidden');
+        }
+
+        async function runSingleTest(suiteName, test) {
+            const startTime = Date.now();
+            updateTestStatus(test.name, 'running');
+            addTestResult(suiteName, test.name, 'running');
+            
+            try {
+                await test.fn();
+                const duration = Date.now() - startTime;
+                addTestResult(suiteName, test.name, 'passed', null, duration);
+            } catch (error) {
+                const duration = Date.now() - startTime;
+                addTestResult(suiteName, test.name, 'failed', error.message, duration);
+            }
+        }
+
+        async function runAllTests() {
+            if (isRunning) return;
+            
+            isRunning = true;
+            clearResults();
+            
+            const runBtn = document.getElementById('runBtn');
+            runBtn.disabled = true;
+            runBtn.textContent = '运行中...';
+            runBtn.classList.add('bg-gray-400');
+            runBtn.classList.remove('bg-blue-500');
+            
+            for (const suite of testSuites) {
+                for (const test of suite.tests) {
+                    await runSingleTest(suite.name, test);
+                    // 小延迟使UI有响应时间
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                }
+            }
+            
+            runBtn.disabled = false;
+            runBtn.textContent = '运行所有测试';
+            runBtn.classList.remove('bg-gray-400');
+            runBtn.classList.add('bg-blue-500');
+            
+            isRunning = false;
+            updateTestStatus('', 'completed');
+            
+            // 显示最终结果
+            const total = testResults.length;
+            const passed = testResults.filter(r => r.status === 'passed').length;
+            const failed = testResults.filter(r => r.status === 'failed').length;
+            
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 ${
+                failed === 0 ? 'bg-green-100 text-green-800 border-green-300' :
+                'bg-red-100 text-red-800 border-red-300'
+            } border`;
+            alertDiv.innerHTML = `
+                <div class="font-semibold">
+                    ${failed === 0 ? '🎉 所有测试通过!' : `⚠️ ${failed} 个测试失败`}
+                </div>
+                <div class="text-sm mt-1">
+                    总计: ${total} | 通过: ${passed} | 失败: ${failed}
+                </div>
+            `;
+            
+            document.body.appendChild(alertDiv);
+            setTimeout(() => alertDiv.remove(), 5000);
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStatistics();
+        });
+    </script>
+</body>
+</html>

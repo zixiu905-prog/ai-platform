@@ -1,0 +1,46 @@
+{
+  "appId": "com.aidesign.aiplatform",
+  "productName": "AI智能体平台",
+  "copyright": "Copyright © 2024 AI Design Platform",
+  "directories": {
+    "output": "dist-web",
+    "buildResources": "build-resources"
+  },
+  "npmRebuild": false,
+  "files": [],
+  "win": {
+    "target": [
+      {
+        "target": "nsis-web",
+        "arch": ["x64"]
+      }
+    ],
+    "publisherName": "AI Design Platform",
+    "verifyUpdateCodeSignature": false,
+    "sign": null,
+    "signDlls": false,
+    "signAndEditExecutable": false
+  },
+  "linux": {
+    "target": ["dir"]
+  },
+  "nsisWeb": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "AI智能体平台",
+    "perMachine": false,
+    "runAfterFinish": true,
+    "deleteAppDataOnUninstall": false,
+    "include": "build-resources/web-installer.nsh",
+    "differentialPackage": false,
+    "artifactName": "${productName}-Setup-Web-${version}.${ext}"
+  },
+  "publish": [
+    {
+      "provider": "generic",
+      "url": "https://www.aidesign.ltd/releases"
+    }
+  ]
+}

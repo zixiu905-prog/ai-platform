@@ -1,0 +1,184 @@
+name: Build Desktop Applications
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Platform to build'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - windows
+          - mac
+          - linux
+
+jobs:
+  build-windows:
+    name: Build Windows Installer
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        working-directory: ./desk
+        run: npm ci
+
+      - name: Build frontend
+        run: |
+          cd ../frontend
+          npm ci
+          npm run build
+
+      - name: Build Electron Main Process
+        working-directory: ./desk
+        run: npm run build:main
+
+      - name: Build Windows Installer
+        working-directory: ./desk
+        run: npm run build:nsis
+        env:
+          NODE_ENV: production
+
+      - name: Generate checksums
+        working-directory: ./desk/dist-electron
+        run: |
+          Get-ChildItem -Filter *.exe | ForEach-Object {
+            md5sum $_.Name | Out-File "$($_.Name).md5" -Encoding utf8
+            sha256sum $_.Name | Out-File "$($_.Name).sha256" -Encoding utf8
+          }
+
+      - name: Upload Windows Installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: |
+            desk/dist-electron/*.exe
+            desk/dist-electron/*.md5
+            desk/dist-electron/*.sha256
+          retention-days: 30
+
+      - name: Release
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            desk/dist-electron/*.exe
+            desk/dist-electron/*.md5
+            desk/dist-electron/*.sha256
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-linux:
+    name: Build Linux Packages
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        working-directory: ./desk
+        run: npm ci
+
+      - name: Build frontend
+        run: |
+          cd ../frontend
+          npm ci
+          npm run build
+
+      - name: Build Electron Main Process
+        working-directory: ./desk
+        run: npm run build:main
+
+      - name: Build Linux AppImage
+        working-directory: ./desk
+        run: npm run build:appimage
+
+      - name: Build Linux Deb
+        working-directory: ./desk
+        run: npm run build:deb
+
+      - name: Generate checksums
+        working-directory: ./desk/dist-electron
+        run: |
+          md5sum *.AppImage *.deb > checksums.md5
+          sha256sum *.AppImage *.deb > checksums.sha256
+
+      - name: Upload Linux Packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-packages
+          path: |
+            desk/dist-electron/*.AppImage
+            desk/dist-electron/*.deb
+            desk/dist-electron/*.md5
+            desk/dist-electron/*.sha256
+          retention-days: 30
+
+  build-mac:
+    name: Build macOS DMG
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        working-directory: ./desk
+        run: npm ci
+
+      - name: Build frontend
+        run: |
+          cd ../frontend
+          npm ci
+          npm run build
+
+      - name: Build Electron Main Process
+        working-directory: ./desk
+        run: npm run build:main
+
+      - name: Build macOS DMG
+        working-directory: ./desk
+        run: npm run build:dmg
+
+      - name: Generate checksums
+        working-directory: ./desk/dist-electron
+        run: |
+          md5 *.dmg | awk '{print $4 "  " $2}' > checksums.md5
+          shasum -a 256 *.dmg | awk '{print $4 "  " $2}' > checksums.sha256
+
+      - name: Upload macOS DMG
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-dmg
+          path: |
+            desk/dist-electron/*.dmg
+            desk/dist-electron/*.md5
+            desk/dist-electron/*.sha256
+          retention-days: 30

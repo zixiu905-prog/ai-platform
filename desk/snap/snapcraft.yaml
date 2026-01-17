@@ -1,0 +1,153 @@
+name: ai-platform-desktop
+base: core22
+version: '1.0.0'
+summary: AI智能体平台 - AI驱动的智能开发平台
+description: |
+  AI智能体平台是一个功能强大的开发工具，集成了先进的AI技术，为开发者提供智能代码分析、自动推荐、实时协作等功能。
+  
+  主要功能:
+  - 🤖 AI智能代码分析和推荐
+  - 👥 实时团队协作
+  - 🔄 自动更新机制
+  - 💻 多平台支持
+  - ☁️ 云端数据同步
+  
+  无论是个人项目还是团队协作，都能显著提升开发效率和代码质量。
+
+grade: stable
+confinement: strict
+license: MIT
+website: https://aiplatform.com
+contact: support@aiplatform.com
+issues: https://github.com/your-username/ai-platform/issues
+source-code: https://github.com/your-username/ai-platform
+
+apps:
+  ai-platform-desktop:
+    command: bin/desktop-launch $SNAP/usr/bin/ai-platform-desktop
+    desktop: usr/share/applications/ai-platform-desktop.desktop
+    extensions:
+      - gnome-3-38
+    plugs:
+      - home
+      - network
+      - browser-support
+      - audio-playback
+      - pulseaudio
+      - opengl
+      - x11
+      - unity7
+      - desktop
+      - desktop-legacy
+      - gsettings
+      - screen-inhibit-control
+      - hardware-observe
+      - mount-observe
+      - network-observe
+      - system-observe
+    environment:
+      DISABLE_WAYLAND: 1
+      TMPDIR: $XDG_RUNTIME_DIR
+
+parts:
+  desktop-gtk3:
+    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    source-subdir: gtk
+    plugin: make
+    build-packages:
+      - libgtk-3-dev
+    stage-packages:
+      - libgtk-3-0
+      - libgtk-3-dev
+      - libglib2.0-dev
+      - libpango1.0-dev
+      - libcairo2-dev
+      - libgdk-pixbuf2.0-dev
+      - libatk1.0-dev
+      - libgtk-3-0
+      - libgdk-pixbuf2.0-0
+      - libpango-1.0-0
+      - libcairo2
+      - libatk1.0-0
+      - libx11-xcb1
+      - libxcomposite1
+      - libxcursor1
+      - libxdamage1
+      - libxi6
+      - libxtst6
+      - libnss3
+      - libcups2
+      - libxss1
+      - libxrandr2
+      - libasound2
+      - libpangocairo-1.0-0
+      - libatk1.0-0
+      - libcairo-gobject2
+      - libgtk-3-0
+      - libgdk-pixbuf2.0-0
+
+  ai-platform-desktop:
+    after: [desktop-gtk3]
+    plugin: nodejs
+    source: .
+    override-build: |
+      npm install
+      npm run build:renderer
+      npm run build:main
+      npm install --production
+      electron-builder --linux --x64 --dir
+      cp -r dist-electron/linux-unpacked $SNAPCRAFT_PART_INSTALL/usr/bin/
+    build-packages:
+      - build-essential
+      - python3
+    stage-packages:
+      - libnss3
+      - libnspr4
+      - libatk-bridge2.0-0
+      - libdrm2
+      - libxkbcommon0
+      - libxcbcomposite0
+      - libxdamage1
+      - libxrandr2
+      - libgbm1
+      - libxss1
+      - libasound2
+    prime:
+      - -usr/share/doc
+      - -usr/share/man
+
+  cleanup:
+    after: [ai-platform-desktop]
+    plugin: nil
+    build-snaps: [core18]
+    override-stage: |
+      echo "Cleaning up..."
+
+slots:
+  dbus-daemon:
+    interface: dbus
+    bus: session
+    name: com.aiplatform.desktop
+
+plugs:
+  ai-platform-home:
+    interface: home
+    write:
+      - $HOME/.ai-platform
+      - $HOME/.config/ai-platform
+      - $HOME/.local/share/ai-platform
+
+  ai-platform-network:
+    interface: network
+    network:
+      - client
+      - server
+
+  ai-platform-browser:
+    interface: browser-support
+    allow-installation:
+      slot: true
+
+environment:
+  XDG_DATA_DIRS: $SNAP_USER_DATA:$SNAP/usr/share:$XDG_DATA_DIRS
+  XDG_CONFIG_DIRS: $SNAP_USER_CONFIG:$SNAP/etc/xdg:$XDG_CONFIG_DIRS

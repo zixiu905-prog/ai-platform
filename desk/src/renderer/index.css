@@ -1,0 +1,330 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 基础样式重置 */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #0a0e1a 0%, #1a1f36 100%);
+  color: #e2e8f0;
+}
+
+#root {
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Glassmorphism 设计系统 */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-dark {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-light {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 16px 64px 0 rgba(31, 38, 135, 0.4);
+}
+
+/* 渐变背景 */
+.gradient-bg {
+  background: linear-gradient(135deg, #0a0e1a 0%, #1a1f36 50%, #2d1b69 100%);
+}
+
+.gradient-card {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 按钮样式 */
+.btn-glass {
+  @apply glass;
+  @apply px-4 py-2 rounded-lg;
+  @apply text-white font-medium;
+  @apply transition-all duration-200;
+  @apply hover:bg-white/10 hover:scale-105;
+  @apply active:scale-95;
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500/50;
+}
+
+.btn-primary {
+  @apply bg-gradient-to-r from-blue-500 to-purple-600;
+  @apply text-white font-medium;
+  @apply px-4 py-2 rounded-lg;
+  @apply transition-all duration-200;
+  @apply hover:from-blue-600 hover:to-purple-700 hover:scale-105;
+  @apply active:scale-95;
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500/50;
+  @apply shadow-lg hover:shadow-xl;
+}
+
+.btn-secondary {
+  @apply glass;
+  @apply text-blue-300 font-medium;
+  @apply px-4 py-2 rounded-lg;
+  @apply transition-all duration-200;
+  @apply hover:bg-white/10 hover:text-white;
+  @apply active:scale-95;
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500/50;
+}
+
+/* 输入框样式 */
+.input-glass {
+  @apply glass;
+  @apply text-white placeholder-gray-400;
+  @apply px-4 py-2 rounded-lg;
+  @apply transition-all duration-200;
+  @apply focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-blue-500/50;
+  @apply border border-white/10;
+}
+
+/* 文本样式 */
+.text-glow {
+  text-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 卡片样式 */
+.card {
+  @apply glass-card;
+  @apply p-6;
+  @apply transition-all duration-300;
+}
+
+.card:hover {
+  @apply scale-105 shadow-2xl;
+  transform: translateY(-2px);
+}
+
+/* 侧边栏样式 */
+.sidebar {
+  @apply glass-dark;
+  @apply h-full;
+  @apply border-r border-white/10;
+}
+
+.sidebar-item {
+  @apply px-4 py-3;
+  @apply text-gray-300 hover:text-white;
+  @apply transition-all duration-200;
+  @apply hover:bg-white/5;
+  @apply cursor-pointer;
+  @apply rounded-lg mx-2;
+}
+
+.sidebar-item.active {
+  @apply bg-gradient-to-r from-blue-500/20 to-purple-600/20;
+  @apply text-white;
+  @apply border-l-4 border-blue-500;
+}
+
+/* 状态指示器 */
+.status-online {
+  @apply w-2 h-2 bg-green-500 rounded-full;
+  @apply animate-pulse;
+}
+
+.status-offline {
+  @apply w-2 h-2 bg-gray-500 rounded-full;
+}
+
+.status-busy {
+  @apply w-2 h-2 bg-yellow-500 rounded-full;
+  @apply animate-pulse;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* 选择文本样式 */
+::selection {
+  background: rgba(59, 130, 246, 0.3);
+  color: white;
+}
+
+/* 工具提示 */
+.tooltip {
+  @apply glass;
+  @apply text-xs text-white;
+  @apply px-2 py-1 rounded;
+  @apply absolute z-50;
+  @apply pointer-events-none;
+}
+
+/* 加载动画 */
+.loading-spinner {
+  @apply animate-spin rounded-full border-2 border-gray-600;
+  @apply border-t-blue-500;
+}
+
+.loading-dots::after {
+  content: '';
+  animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% { content: ''; }
+  40% { content: '.'; }
+  60% { content: '..'; }
+  80%, 100% { content: '...'; }
+}
+
+/* 模态框 */
+.modal-overlay {
+  @apply fixed inset-0 z-50;
+  @apply bg-black/50 backdrop-blur-sm;
+  @apply flex items-center justify-center;
+}
+
+.modal-content {
+  @apply glass-panel;
+  @apply p-6 rounded-2xl;
+  @apply max-w-lg w-full mx-4;
+  @apply animate-in fade-in zoom-in duration-200;
+}
+
+/* 标签页 */
+.tabs {
+  @apply flex space-x-1 p-1;
+  @apply glass rounded-lg;
+}
+
+.tab-item {
+  @apply px-4 py-2 rounded-md;
+  @apply text-gray-400 hover:text-white;
+  @apply transition-all duration-200;
+  @apply cursor-pointer;
+}
+
+.tab-item.active {
+  @apply bg-white/10 text-white;
+  @apply shadow-md;
+}
+
+/* 代码块样式 */
+.code-block {
+  @apply glass-dark;
+  @apply p-4 rounded-lg;
+  @apply font-mono text-sm;
+  @apply overflow-x-auto;
+  @apply border border-gray-700;
+}
+
+/* 通知样式 */
+.notification {
+  @apply glass;
+  @apply px-4 py-3 rounded-lg;
+  @apply shadow-lg;
+  @apply animate-in slide-in-from-right duration-300;
+}
+
+.notification.success {
+  @apply border-l-4 border-green-500;
+  @apply bg-green-500/10;
+}
+
+.notification.error {
+  @apply border-l-4 border-red-500;
+  @apply bg-red-500/10;
+}
+
+.notification.warning {
+  @apply border-l-4 border-yellow-500;
+  @apply bg-yellow-500/10;
+}
+
+.notification.info {
+  @apply border-l-4 border-blue-500;
+  @apply bg-blue-500/10;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .sidebar {
+    @apply absolute z-40;
+    @apply transform -translate-x-full transition-transform duration-300;
+  }
+  
+  .sidebar.open {
+    @apply translate-x-0;
+  }
+  
+  .modal-content {
+    @apply mx-4;
+  }
+}
+
+/* 打印样式 */
+@media print {
+  .sidebar,
+  .desktop-titlebar,
+  button {
+    display: none !important;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}

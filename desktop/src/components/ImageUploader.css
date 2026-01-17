@@ -1,0 +1,468 @@
+.image-uploader {
+  width: 100%;
+}
+
+.upload-list {
+  margin-bottom: 16px;
+}
+
+.upload-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.upload-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  border: 2px dashed #d1d9e0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f8fafc 0%, #e1e8ed 100%);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-button:hover {
+  border-color: #667eea;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.upload-button::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #667eea, #764ba2, #667eea);
+  border-radius: 12px;
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+  background-size: 400% 400%;
+  animation: gradientShift 3s ease infinite;
+}
+
+.upload-button:hover::before {
+  opacity: 0.3;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.upload-icon {
+  font-size: 48px;
+  color: #667eea;
+  margin-bottom: 12px;
+  transition: transform 0.3s ease;
+}
+
+.upload-button:hover .upload-icon {
+  transform: scale(1.1);
+}
+
+.upload-text {
+  text-align: center;
+  font-weight: 500;
+  color: #333;
+}
+
+.upload-text > div:first-child {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.image-item {
+  border: 1px solid #e1e8ed;
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.image-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: #667eea;
+}
+
+.image-item.error {
+  border-color: #ff4d4f;
+}
+
+.image-container {
+  position: relative;
+  height: 150px;
+  overflow: hidden;
+  background: #fafafa;
+}
+
+.image-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.image-item:hover .image-thumbnail {
+  transform: scale(1.05);
+}
+
+.upload-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.error-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 77, 79, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.error-icon {
+  color: #ff4d4f;
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.image-info {
+  padding: 12px;
+}
+
+.image-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-top: 4px;
+}
+
+.image-actions {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.image-item:hover .image-actions {
+  opacity: 1;
+}
+
+.image-actions .ant-btn {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  border: none;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image-actions .ant-btn:hover {
+  background: white;
+  transform: scale(1.05);
+}
+
+/* 预览模态框样式 */
+.image-preview-modal .ant-modal-content {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.image-preview-content {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  max-height: 800px;
+}
+
+.preview-toolbar {
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #f8fafc 0%, #e1e8ed 100%);
+  border-bottom: 1px solid #e1e8ed;
+  display: flex;
+  justify-content: center;
+}
+
+.preview-image-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  overflow: hidden;
+  position: relative;
+}
+
+.preview-image {
+  max-width: 90%;
+  max-height: 90%;
+  transition: transform 0.3s ease;
+  cursor: move;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+
+.preview-image-container:active {
+  cursor: grabbing;
+}
+
+.preview-info {
+  padding: 16px 24px;
+  background: #fafafa;
+  border-top: 1px solid #e1e8ed;
+}
+
+/* 拖拽上传样式 */
+.image-uploader.drag-over .upload-button {
+  border-color: #667eea;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+  transform: scale(1.02);
+}
+
+/* 加载状态 */
+.image-uploader.loading .image-item {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* 禁用状态 */
+.image-uploader.disabled .upload-button {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.image-uploader.disabled .image-actions {
+  display: none;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+  .upload-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .upload-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+  }
+  
+  .upload-button {
+    height: 150px;
+  }
+  
+  .upload-icon {
+    font-size: 36px;
+    margin-bottom: 8px;
+  }
+  
+  .upload-text > div:first-child {
+    font-size: 12px;
+  }
+  
+  .image-container {
+    height: 120px;
+  }
+  
+  .image-info {
+    padding: 8px;
+  }
+  
+  .image-preview-content {
+    height: 70vh;
+  }
+  
+  .preview-toolbar {
+    padding: 12px 16px;
+  }
+  
+  .preview-info {
+    padding: 12px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .upload-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+  }
+  
+  .upload-button {
+    height: 120px;
+  }
+  
+  .upload-icon {
+    font-size: 28px;
+  }
+  
+  .image-container {
+    height: 90px;
+  }
+  
+  .image-info {
+    padding: 6px;
+  }
+  
+  .image-actions {
+    top: 4px;
+    right: 4px;
+    opacity: 1; /* 移动端始终显示 */
+  }
+  
+  .image-actions .ant-btn {
+    padding: 2px 6px;
+    font-size: 12px;
+  }
+}
+
+/* 暗色主题 */
+@media (prefers-color-scheme: dark) {
+  .upload-button {
+    background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
+    border-color: #434343;
+  }
+  
+  .upload-button:hover {
+    border-color: #667eea;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+  }
+  
+  .upload-text {
+    color: #fff;
+  }
+  
+  .image-item {
+    background: #1f1f1f;
+    border-color: #434343;
+  }
+  
+  .image-item:hover {
+    border-color: #667eea;
+  }
+  
+  .image-container {
+    background: #2a2a2a;
+  }
+  
+  .error-overlay {
+    background: rgba(255, 77, 79, 0.2);
+  }
+  
+  .image-actions .ant-btn {
+    background: rgba(31, 31, 31, 0.9);
+  }
+  
+  .image-actions .ant-btn:hover {
+    background: #1f1f1f;
+  }
+  
+  .image-preview-modal .ant-modal-content {
+    background: #1f1f1f;
+  }
+  
+  .preview-toolbar {
+    background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
+    border-bottom-color: #434343;
+  }
+  
+  .preview-info {
+    background: #2a2a2a;
+    border-top-color: #434343;
+  }
+}
+
+/* 动画效果 */
+@keyframes imageUpload {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.image-item {
+  animation: imageUpload 0.3s ease-out;
+}
+
+/* 文件类型指示器 */
+.file-type-indicator {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 500;
+  backdrop-filter: blur(4px);
+}
+
+/* 上传进度条自定义样式 */
+.upload-overlay .ant-progress-circle .ant-progress-text {
+  color: white !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+/* 选择框样式 */
+.image-item.selected {
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+}
+
+.image-item.selected::after {
+  content: '✓';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 24px;
+  height: 24px;
+  background: #667eea;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  z-index: 1;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}

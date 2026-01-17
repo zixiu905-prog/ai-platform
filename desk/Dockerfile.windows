@@ -1,0 +1,19 @@
+# Dockerfile for building Windows installers on Linux
+FROM electronuserland/builder:wine
+
+# Set working directory
+WORKDIR /project
+
+# Copy project files
+COPY . /project
+
+# Install dependencies
+RUN cd /project/desk && npm ci
+
+# Build Windows installer
+RUN cd /project/desk && \
+    npm run build:nsis && \
+    npm run build:portable
+
+# Output will be in /project/desk/dist-electron
+CMD ["ls", "-lah", "/project/desk/dist-electron"]

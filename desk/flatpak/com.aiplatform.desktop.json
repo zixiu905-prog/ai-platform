@@ -1,0 +1,152 @@
+{
+  "app-id": "com.aiplatform.desktop",
+  "runtime": "org.freedesktop.Platform",
+  "runtime-version": "22.08",
+  "sdk": "org.freedesktop.Sdk",
+  "command": "ai-platform-desktop",
+  "separate-locales": false,
+  "finish-args": [
+    "--share=ipc",
+    "--socket=x11",
+    "--socket=fallback-x11",
+    "--device=dri",
+    "--socket=pulseaudio",
+    "--share=network",
+    "--filesystem=home",
+    "--filesystem=xdg-download",
+    "--filesystem=xdg-documents",
+    "--filesystem=xdg-config",
+    "--filesystem=xdg-cache",
+    "--filesystem=xdg-data",
+    "--talk-name=org.freedesktop.Notifications",
+    "--talk-name=org.freedesktop.Secrets",
+    "--talk-name=org.kde.StatusNotifierWatcher",
+    "--system-talk-name=org.freedesktop.NetworkManager",
+    "--own-name=org.freedesktop.portal.Desktop",
+    "--env=XDG_CURRENT_DESKTOP=GNOME",
+    "--env=XCURSOR_PATH=/run/host/user-share/icons:/usr/share/icons",
+    "--env=LD_LIBRARY_PATH=/app/lib:/app/lib64:/usr/lib:/usr/lib64",
+    "--env=GDK_BACKEND=x11",
+    "--env=NO_AT_BRIDGE=1"
+  ],
+  "modules": [
+    {
+      "name": "nodejs",
+      "buildsystem": "simple",
+      "cleanup": [
+        "*"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://nodejs.org/dist/v18.19.0/node-v18.19.0-linux-x64.tar.xz",
+          "sha256": "6f56c0e356a7165e30a13a1452a5777c97f68176d48214ab87ab64706fd82e2f",
+          "dest": "node"
+        }
+      ],
+      "build-commands": [
+        "mkdir -p /app/bin",
+        "cp -r node/* /app/"
+      ]
+    },
+    {
+      "name": "electron-deps",
+      "buildsystem": "simple",
+      "cleanup": [
+        "*"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://github.com/electron/electron/releases/download/v28.0.0/electron-v28.0.0-linux-x64.zip",
+          "sha256": "a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef1234567890",
+          "dest": "electron"
+        }
+      ],
+      "build-commands": [
+        "mkdir -p /app/lib",
+        "cp -r electron/* /app/lib/"
+      ]
+    },
+    {
+      "name": "ai-platform-desktop",
+      "buildsystem": "simple",
+      "build-options": {
+        "env": {
+          "npm_config_cache": "/run/build/ai-platform-desktop/npm-cache",
+          "npm_config_prefix": "/app",
+          "NODE_PATH": "/app/lib/node_modules"
+        }
+      },
+      "sources": [
+        {
+          "type": "dir",
+          "path": "..",
+          "skip": [
+            ".git",
+            "node_modules",
+            "dist-electron"
+          ]
+        }
+      ],
+      "build-commands": [
+        "# Setup environment",
+        "export PATH=/app/bin:$PATH",
+        "export npm_config_user=root",
+        "export npm_config_global=/app",
+        "export npm_config_prefix=/app",
+        "export npm_config_cache=/run/build/ai-platform-desktop/npm-cache",
+        
+        "# Install dependencies",
+        "cd desk && /app/bin/npm install",
+        "cd ../frontend && /app/bin/npm install",
+        
+        "# Build application",
+        "cd ../frontend && /app/bin/npm run build",
+        "cd ../desk && /app/bin/npm run build:main",
+        
+        "# Package with electron-builder",
+        "cd desk && /app/bin/npm run build:all -- --linux appimage --x64",
+        
+        "# Install to /app",
+        "mkdir -p /app/bin /app/lib",
+        "cp -r dist-electron/linux-unpacked/* /app/bin/",
+        "cp -r node_modules /app/lib/",
+        
+        "# Create desktop file",
+        "mkdir -p /app/share/applications",
+        "cp ../flatpak/com.aiplatform.desktop.desktop /app/share/applications/",
+        
+        "# Install icons",
+        "mkdir -p /app/share/icons/hicolor/256x256/apps",
+        "cp ../flatpak/com.aiplatform.desktop.png /app/share/icons/hicolor/256x256/apps/",
+        
+        "# Create wrapper script",
+        "cat > /app/bin/ai-platform-desktop << 'EOF'",
+        "#!/bin/bash",
+        "export ELECTRON_IS_DEV=0",
+        "export ELECTRON_RUN_AS_NODE=0",
+        "export XDG_CONFIG_DIRS=/app/etc/xdg:$XDG_CONFIG_DIRS",
+        "export XDG_DATA_DIRS=/app/share:$XDG_DATA_DIRS",
+        "export GI_TYPELIB_PATH=/app/lib/girepository-1.0:$GI_TYPELIB_PATH",
+        "export LD_LIBRARY_PATH=/app/lib:$LD_LIBRARY_PATH",
+        "export PATH=/app/bin:$PATH",
+        "exec /app/bin/ai-platform-desktop \"$@\"",
+        "EOF",
+        "chmod +x /app/bin/ai-platform-desktop"
+      ],
+      "post-install": [
+        "chmod -R 755 /app/bin",
+        "chmod -R 644 /app/share/applications/*.desktop",
+        "desktop-file-validate /app/share/applications/com.aiplatform.desktop.desktop || true"
+      ]
+    }
+  ],
+  "add-extensions": [
+    "org.freedesktop.Platform.ffmpeg-full",
+    "org.freedesktop.Platform.Theme.adwaita-dark"
+  ],
+  "sdk-extensions": [
+    "org.freedesktop.Sdk.Extension.ffmpeg-full"
+  ]
+}

@@ -1,0 +1,8 @@
+location = /api/version {
+    add_header Content-Type application/json;
+    return 200 '{"version":"1.0.0","releaseDate":"2026-01-09T00:00:00Z","platforms":{"windows":{"web":{"name":"Web Installer","url":"https://www.aidesign.ltd/downloads/AI-Platform-Web-Installer-1.0.0.exe","size":"2-5 MB","recommended":true,"description":"Fast download, installs from cloud"},"full":{"name":"Full Installer","url":"https://www.aidesign.ltd/releases/v1.0.0/AI-Platform-Setup-1.0.0.exe","size":"170 MB","recommended":false,"description":"Complete offline installation"}}},"releaseNotes":"Initial release of AI Platform desktop application","systemRequirements":"Windows 10 or later (x64)"}}';
+}
+location = /releases/latest.json {
+    add_header Content-Type application/json;
+    return 200 '{"version":"1.0.0","releaseDate":"2026-01-09T00:00:00Z","platforms":{"windows":{"web":{"name":"Web Installer","url":"https://www.aidesign.ltd/downloads/AI-Platform-Web-Installer-1.0.0.exe","size":"2-5 MB","recommended":true,"description":"Fast download, installs from cloud"},"full":{"name":"Full Installer","url":"https://www.aidesign.ltd/releases/v1.0.0/AI-Platform-Setup-1.0.0.exe","size":"170 MB","recommended":false,"description":"Complete offline installation"}}},"releaseNotes":"Initial release of AI Platform desktop application","systemRequirements":"Windows 10 or later (x64)"}}';
+}

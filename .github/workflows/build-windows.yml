@@ -1,0 +1,64 @@
+name: Build Windows Desktop App
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+
+    - name: 设置Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: desk/package-lock.json
+    
+    - name: 安装依赖
+      run: |
+        cd desk
+        npm ci
+    
+    - name: 构建前端
+      run: |
+        cd frontend
+        npm ci
+        npm run build
+    
+    - name: 构建Electron主进程
+      run: |
+        cd desk
+        npm run build:main
+    
+    - name: 构建Windows安装程序
+      run: |
+        cd desk
+        npm run build:nsis
+      env:
+        CSC_LINK: ${{ secrets.CSC_LINK }}
+        CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+    
+    - name: 上传构建产物
+      uses: actions/upload-artifact@v4
+      with:
+        name: windows-installer
+        path: desk/dist-electron/*.exe
+        retention-days: 30
+    
+    - name: 创建Release
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: softprops/action-gh-release@v1
+      with:
+        files: desk/dist-electron/*.exe
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

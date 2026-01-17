@@ -1,0 +1,417 @@
+/**
+ * 现代简约主页面样式
+ */
+
+.modern-home-page {
+  padding: var(--spacing-lg);
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+/* 欢迎区域 */
+.modern-welcome-section {
+  margin-bottom: var(--spacing-3xl);
+}
+
+.modern-welcome-content {
+  text-align: center;
+  padding: var(--spacing-3xl) var(--spacing-xl);
+  background: linear-gradient(135deg, var(--color-primary-600) 0%, var(--color-primary-500) 100%);
+  border-radius: var(--border-radius-xl);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.modern-welcome-content::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  animation: float 20s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(180deg); }
+}
+
+.modern-welcome-text {
+  position: relative;
+  z-index: 1;
+}
+
+.modern-welcome-text h2 {
+  color: white !important;
+  margin-bottom: var(--spacing-md) !important;
+  font-weight: var(--font-weight-bold);
+  font-size: 2.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.modern-welcome-text p {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 1.1rem;
+  margin-bottom: var(--spacing-xl) !important;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.modern-welcome-actions {
+  position: relative;
+  z-index: 1;
+}
+
+.modern-btn-lg {
+  height: 48px;
+  padding: var(--spacing-md) var(--spacing-xl);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  transition: all var(--animation-duration-normal) var(--animation-easing-ease);
+}
+
+.modern-btn-lg:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* 快速操作区域 */
+.modern-section {
+  margin-bottom: var(--spacing-3xl);
+}
+
+.modern-quick-action {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  height: 100%;
+  min-height: 140px;
+  cursor: pointer;
+  transition: all var(--animation-duration-normal) var(--animation-easing-ease);
+}
+
+.modern-quick-action:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.modern-quick-action-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: currentColor;
+  color: white;
+  border-radius: var(--border-radius-lg);
+  margin-bottom: var(--spacing-md);
+  font-size: 20px;
+}
+
+.modern-quick-action-content {
+  flex: 1;
+}
+
+.modern-quick-action-content h5 {
+  margin-bottom: var(--spacing-xs) !important;
+  color: var(--color-text-primary) !important;
+}
+
+.modern-quick-action-content p {
+  margin: 0 !important;
+  line-height: var(--line-height-tight);
+}
+
+/* 统计卡片 */
+.modern-stat-card {
+  padding: var(--spacing-lg);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.modern-stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-primary-500) 0%, var(--color-primary-300) 100%);
+  border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+}
+
+.modern-stat-icon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: currentColor;
+  color: white;
+  border-radius: var(--border-radius-lg);
+  margin: 0 auto var(--spacing-md);
+  font-size: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.modern-stat-content {
+  position: relative;
+}
+
+.modern-stat-trend {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+}
+
+/* 活动列表 */
+.modern-activity-list {
+  border: none !important;
+}
+
+.modern-activity-list .ant-list-item {
+  padding: var(--spacing-md) 0 !important;
+  border-bottom: 1px solid var(--color-surface-border) !important;
+  border-radius: 0 !important;
+}
+
+.modern-activity-list .ant-list-item:last-child {
+  border-bottom: none !important;
+}
+
+.modern-activity-list .ant-list-item-meta-avatar {
+  margin-right: var(--spacing-md) !important;
+}
+
+.modern-activity-list .ant-list-item-meta-title {
+  margin-bottom: var(--spacing-xs) !important;
+}
+
+.modern-activity-list .ant-list-item-meta-description {
+  line-height: var(--line-height-tight) !important;
+}
+
+/* 提示卡片 */
+.modern-tips {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.modern-tip-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: var(--color-surface-secondary);
+  border-radius: var(--border-radius-lg);
+  transition: all var(--animation-duration-fast) var(--animation-easing-ease);
+}
+
+.modern-tip-item:hover {
+  background: var(--color-surface-elevated);
+  transform: translateX(4px);
+}
+
+.modern-tip-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: currentColor;
+  color: white;
+  border-radius: var(--border-radius-md);
+  flex-shrink: 0;
+  font-size: 18px;
+}
+
+.modern-tip-content {
+  flex: 1;
+}
+
+.modern-tip-content h5 {
+  margin-bottom: var(--spacing-xs) !important;
+  color: var(--color-text-primary) !important;
+}
+
+.modern-tip-content p {
+  margin: 0 !important;
+  line-height: var(--line-height-tight) !important;
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+  .modern-welcome-content {
+    padding: var(--spacing-2xl) var(--spacing-lg);
+  }
+  
+  .modern-welcome-text h2 {
+    font-size: 2rem;
+  }
+  
+  .modern-welcome-text p {
+    font-size: 1rem;
+  }
+  
+  .modern-quick-action {
+    min-height: 120px;
+    padding: var(--spacing-md);
+  }
+  
+  .modern-quick-action-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .modern-home-page {
+    padding: var(--spacing-md);
+  }
+  
+  .modern-welcome-section {
+    margin-bottom: var(--spacing-2xl);
+  }
+  
+  .modern-welcome-content {
+    padding: var(--spacing-xl) var(--spacing-md);
+  }
+  
+  .modern-welcome-text h2 {
+    font-size: 1.75rem;
+  }
+  
+  .modern-welcome-text p {
+    font-size: 0.95rem;
+  }
+  
+  .modern-section {
+    margin-bottom: var(--spacing-2xl);
+  }
+  
+  .modern-quick-action {
+    flex-direction: column;
+    text-align: center;
+    min-height: 100px;
+    padding: var(--spacing-md);
+  }
+  
+  .modern-quick-action-icon {
+    margin-bottom: var(--spacing-sm);
+    margin-right: auto;
+  }
+  
+  .modern-welcome-actions {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+  
+  .modern-btn-lg {
+    width: 100%;
+    height: 44px;
+  }
+  
+  .modern-stat-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+  }
+  
+  .modern-tip-item {
+    padding: var(--spacing-sm);
+  }
+  
+  .modern-tip-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .modern-home-page {
+    padding: var(--spacing-sm);
+  }
+  
+  .modern-welcome-content {
+    padding: var(--spacing-lg) var(--spacing-sm);
+  }
+  
+  .modern-welcome-text h2 {
+    font-size: 1.5rem;
+  }
+  
+  .modern-welcome-text p {
+    font-size: 0.9rem;
+  }
+  
+  .modern-quick-action-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+  
+  .modern-stat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+}
+
+/* 暗色主题适配 */
+[data-theme="dark"] .modern-welcome-content {
+  background: linear-gradient(135deg, var(--color-primary-700) 0%, var(--color-primary-600) 100%);
+}
+
+[data-theme="dark"] .modern-welcome-content::before {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+}
+
+[data-theme="dark"] .modern-welcome-text p {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+[data-theme="dark"] .modern-tip-item {
+  background: var(--color-surface-primary);
+}
+
+[data-theme="dark"] .modern-tip-item:hover {
+  background: var(--color-surface-secondary);
+}
+
+/* 动画优化 */
+@media (prefers-reduced-motion: reduce) {
+  .modern-welcome-content::before {
+    animation: none;
+  }
+  
+  .modern-quick-action:hover {
+    transform: none;
+  }
+  
+  .modern-tip-item:hover {
+    transform: none;
+  }
+  
+  .modern-btn-lg:hover {
+    transform: none;
+  }
+}
+
+/* 打印样式 */
+@media print {
+  .modern-home-page {
+    display: none;
+  }
+}

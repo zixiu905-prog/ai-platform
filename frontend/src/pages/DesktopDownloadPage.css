@@ -1,0 +1,228 @@
+.desktop-download-page {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* 页面头部 */
+.page-header {
+  margin-bottom: 24px;
+}
+
+.header-content {
+  text-align: center;
+}
+
+.header-title {
+  margin-bottom: 24px;
+}
+
+.header-stats {
+  margin-top: 24px;
+}
+
+/* 功能卡片 */
+.features-card {
+  margin-bottom: 24px;
+}
+
+.feature-item {
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  background: #fafafa;
+  transition: all 0.3s;
+}
+
+.feature-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: #1890ff;
+}
+
+.feature-icon {
+  font-size: 48px;
+  color: #1890ff;
+  margin-bottom: 16px;
+}
+
+/* 快速开始提示 */
+.quick-start-alert {
+  margin-bottom: 24px;
+}
+
+.quick-start-alert .ant-alert-message {
+  font-size: 16px;
+}
+
+/* 平台卡片 */
+.platform-card {
+  margin-bottom: 24px;
+}
+
+.platform-content {
+  padding: 16px 0;
+}
+
+/* 版本卡片 */
+.version-card {
+  height: 100%;
+  transition: all 0.3s;
+}
+
+.version-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.version-header {
+  padding: 8px 0;
+}
+
+.version-platform {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.platform-icon {
+  font-size: 24px;
+}
+
+.platform-icon.windows {
+  color: #0078d7;
+}
+
+.platform-icon.mac {
+  color: #999;
+}
+
+.platform-icon.linux {
+  color: #f39c12;
+}
+
+.version-details {
+  margin: 16px 0;
+}
+
+.version-details .ant-descriptions-item-label {
+  font-weight: 500;
+}
+
+.download-button {
+  margin-top: 16px;
+  height: 48px;
+  font-size: 16px;
+}
+
+/* 系统要求卡片 */
+.requirements-card {
+  margin-bottom: 24px;
+}
+
+/* 校验和卡片 */
+.checksum-card {
+  margin-bottom: 24px;
+}
+
+/* 平台标签 */
+.platform-icon {
+  font-size: 32px;
+  margin-right: 8px;
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+  .desktop-download-page {
+    padding: 16px;
+  }
+  
+  .header-stats {
+    margin-top: 16px;
+  }
+  
+  .feature-item {
+    padding: 16px;
+  }
+  
+  .feature-icon {
+    font-size: 36px;
+    margin-bottom: 12px;
+  }
+  
+  .download-button {
+    height: 40px;
+    font-size: 14px;
+  }
+}
+
+/* 安装教程 */
+.install-guide {
+  padding: 24px;
+}
+
+.install-guide .ant-steps-vertical {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+/* 统计卡片 */
+.header-stats .ant-statistic-title {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.header-stats .ant-statistic-content {
+  font-size: 24px;
+  font-weight: bold;
+  color: #1890ff;
+}
+
+/* 平台选择器标签页 */
+.platform-card .ant-tabs-tab {
+  font-size: 16px;
+  padding: 12px 24px;
+}
+
+.platform-card .ant-tabs-tab-active {
+  font-weight: 600;
+}
+
+/* 暗黑模式适配 */
+@media (prefers-color-scheme: dark) {
+  .feature-item {
+    background: #1f1f1f;
+    border-color: #303030;
+  }
+  
+  .feature-item:hover {
+    border-color: #177ddc;
+  }
+  
+  .version-card {
+    background: #1f1f1f;
+    border-color: #303030;
+  }
+}
+
+/* 加载状态 */
+.desktop-download-page .ant-spin-nested-loading {
+  min-height: 400px;
+}
+
+/* 空状态 */
+.desktop-download-page .ant-empty {
+  padding: 60px 20px;
+}
+
+/* 版本标签 */
+.ant-tag {
+  margin: 0 4px;
+}
+
+/* 文件大小标签 */
+.version-size {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.65);
+}

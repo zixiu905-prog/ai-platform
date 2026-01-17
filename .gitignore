@@ -1,0 +1,83 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Build outputs
+dist/
+dist-electron/
+build/
+out/
+.next/
+.cache/
+*.tsbuildinfo
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+coverage/
+*.lcov
+.nyc_output/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+
+# Large files
+*.tar.gz
+*.bundle
+*.zip
+*.7z
+*.rar
+*.dmg
+*.iso
+
+# SSL certificates (keep example files)
+nginx/ssl/*.pem
+!nginx/ssl/*.example
+nginx/ssl/*.key
+!nginx/ssl/*.example.key
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# OS
+Thumbs.db
+Desktop.ini
+
+# Electron
+.app/
+.dmg/
+.exe/
+.nsis/
+.appx/
+
+# Redis
+dump.rdb

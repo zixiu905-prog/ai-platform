@@ -1,0 +1,242 @@
+groups:
+  - name: production_alerts
+    rules:
+      # 系统资源告警
+      - alert: HighCPUUsage
+        expr: 100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "高CPU使用率告警"
+          description: "实例 {{ $labels.instance }} CPU使用率超过80%，当前值: {{ $value }}%"
+
+      - alert: CriticalCPUUsage
+        expr: 100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 95
+        for: 2m
+        labels:
+          severity: critical
+          service: system
+        annotations:
+          summary: "严重CPU使用率告警"
+          description: "实例 {{ $labels.instance }} CPU使用率超过95%，当前值: {{ $value }}%"
+
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "高内存使用率告警"
+          description: "实例 {{ $labels.instance }} 内存使用率超过85%，当前值: {{ $value }}%"
+
+      - alert: CriticalMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 95
+        for: 2m
+        labels:
+          severity: critical
+          service: system
+        annotations:
+          summary: "严重内存使用率告警"
+          description: "实例 {{ $labels.instance }} 内存使用率超过95%，当前值: {{ $value }}%"
+
+      - alert: DiskSpaceWarning
+        expr: (1 - (node_filesystem_avail_bytes / node_filesystem_size_bytes)) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "磁盘空间不足警告"
+          description: "实例 {{ $labels.instance }} 磁盘 {{ $labels.mountpoint }} 使用率超过85%，当前值: {{ $value }}%"
+
+      - alert: DiskSpaceCritical
+        expr: (1 - (node_filesystem_avail_bytes / node_filesystem_size_bytes)) * 100 > 95
+        for: 2m
+        labels:
+          severity: critical
+          service: system
+        annotations:
+          summary: "磁盘空间严重不足"
+          description: "实例 {{ $labels.instance }} 磁盘 {{ $labels.mountpoint }} 使用率超过95%，当前值: {{ $value }}%"
+
+      # 应用服务告警
+      - alert: ServiceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: application
+        annotations:
+          summary: "服务下线告警"
+          description: "服务 {{ $labels.job }} 在实例 {{ $labels.instance }} 上已下线"
+
+      - alert: HighResponseTime
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          severity: warning
+          service: application
+        annotations:
+          summary: "API响应时间过长"
+          description: "95%的API请求响应时间超过1秒，当前值: {{ $value }}s"
+
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+          service: application
+        annotations:
+          summary: "高错误率告警"
+          description: "API错误率超过5%，当前值: {{ $value | humanizePercentage }}"
+
+      - alert: CriticalErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) > 0.1
+        for: 2m
+        labels:
+          severity: critical
+          service: application
+        annotations:
+          summary: "严重错误率告警"
+          description: "API错误率超过10%，当前值: {{ $value | humanizePercentage }}"
+
+      # 数据库告警
+      - alert: DatabaseConnectionHigh
+        expr: database_connections_active / database_connections_max > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          service: database
+        annotations:
+          summary: "数据库连接数过高"
+          description: "数据库连接使用率超过80%，当前值: {{ $value | humanizePercentage }}"
+
+      - alert: DatabaseConnectionCritical
+        expr: database_connections_active / database_connections_max > 0.95
+        for: 2m
+        labels:
+          severity: critical
+          service: database
+        annotations:
+          summary: "数据库连接数严重过高"
+          description: "数据库连接使用率超过95%，当前值: {{ $value | humanizePercentage }}"
+
+      # Redis告警
+      - alert: RedisMemoryHigh
+        expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.85
+        for: 5m
+        labels:
+          severity: warning
+          service: redis
+        annotations:
+          summary: "Redis内存使用率过高"
+          description: "Redis内存使用率超过85%，当前值: {{ $value | humanizePercentage }}"
+
+      - alert: RedisConnectionHigh
+        expr: redis_connected_clients > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: redis
+        annotations:
+          summary: "Redis连接数过高"
+          description: "Redis连接数超过80，当前值: {{ $value }}"
+
+      # AI服务告警
+      - alert: AIRequestRateHigh
+        expr: rate(ai_requests_total[5m]) > 100
+        for: 5m
+        labels:
+          severity: warning
+          service: ai
+        annotations:
+          summary: "AI请求率过高"
+          description: "AI请求率超过100次/秒，当前值: {{ $value }}"
+
+      - alert: AIResponseTimeHigh
+        expr: histogram_quantile(0.95, rate(ai_request_duration_seconds_bucket[5m])) > 30
+        for: 5m
+        labels:
+          severity: warning
+          service: ai
+        annotations:
+          summary: "AI响应时间过长"
+          description: "95%的AI请求响应时间超过30秒，当前值: {{ $value }}s"
+
+      # 设计软件集成告警
+      - alert: SoftwareConnectionFailure
+        expr: software_connection_errors_total / software_connection_attempts_total > 0.2
+        for: 5m
+        labels:
+          severity: warning
+          service: software_integration
+        annotations:
+          summary: "设计软件连接失败率高"
+          description: "设计软件连接失败率超过20%，当前值: {{ $value | humanizePercentage }}"
+
+      - alert: TooManySoftwareConnections
+        expr: software_connections_active > 100
+        for: 5m
+        labels:
+          severity: warning
+          service: software_integration
+        annotations:
+          summary: "设计软件连接数过多"
+          description: "活跃的设计软件连接数超过100，当前值: {{ $value }}"
+
+      # WebSocket告警
+      - alert: WebSocketConnectionsHigh
+        expr: active_connections_total > 1000
+        for: 5m
+        labels:
+          severity: warning
+          service: websocket
+        annotations:
+          summary: "WebSocket连接数过高"
+          description: "活跃WebSocket连接数超过1000，当前值: {{ $value }}"
+
+      - alert: WebSocketConnectionErrors
+        expr: rate(websocket_connection_errors_total[5m]) > 5
+        for: 5m
+        labels:
+          severity: warning
+          service: websocket
+        annotations:
+          summary: "WebSocket连接错误率高"
+          description: "WebSocket连接错误率超过5次/秒，当前值: {{ $value }}"
+
+  - name: business_alerts
+    rules:
+      # 业务指标告警
+      - alert: UserRegistrationDrop
+        expr: rate(user_registrations_total[1h]) < 0.5
+        for: 30m
+        labels:
+          severity: warning
+          service: business
+        annotations:
+          summary: "用户注册率下降"
+          description: "过去1小时用户注册率低于0.5次/小时，当前值: {{ $value }}"
+
+      - alert: LowActiveUsers
+        expr: active_users_total < 50
+        for: 10m
+        labels:
+          severity: warning
+          service: business
+        annotations:
+          summary: "活跃用户数过低"
+          description: "活跃用户数低于50，当前值: {{ $value }}"
+
+      - alert: PaymentFailureRate
+        expr: rate(payment_failures_total[1h]) / rate(payment_attempts_total[1h]) > 0.1
+        for: 10m
+        labels:
+          severity: critical
+          service: payment
+        annotations:
+          summary: "支付失败率过高"
+          description: "支付失败率超过10%，当前值: {{ $value | humanizePercentage }}"

@@ -1,0 +1,46 @@
+{
+  "appId": "com.aidesign.aiplatform",
+  "productName": "AI智能体平台",
+  "copyright": "Copyright © 2024 AI Design Platform",
+  "directories": {
+    "output": "dist",
+    "buildResources": "build-resources"
+  },
+  "npmRebuild": false,
+  "files": [
+    "dist/**/*",
+    "node_modules/**/*",
+    "package.json"
+  ],
+  "extraResources": [
+    {
+      "from": "../frontend/dist",
+      "to": "frontend",
+      "filter": ["**/*"]
+    }
+  ],
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64"]
+      }
+    ],
+    "publisherName": "AI Design Platform",
+    "verifyUpdateCodeSignature": false,
+    "sign": null,
+    "signDlls": false,
+    "signAndEditExecutable": false
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "AI智能体平台",
+    "include": "build-resources/installer.nsh",
+    "deleteAppDataOnUninstall": false,
+    "runAfterFinish": true
+  },
+  "publish": null
+}

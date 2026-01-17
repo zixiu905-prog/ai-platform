@@ -1,0 +1,65 @@
+.app-content {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 主题变量 */
+[data-theme="dark"] {
+  --background-color: #141414;
+  --text-color: #ffffff;
+  --border-color: #434343;
+}
+
+[data-theme="light"] {
+  --background-color: #ffffff;
+  --text-color: #000000;
+  --border-color: #d9d9d9;
+}
+
+/* 页面通用样式 */
+.home-page,
+.files-page,
+.api-page,
+.system-page,
+.settings-page {
+  padding: 24px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* 滚动条样式 */
+.app-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.app-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.app-content::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.app-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .app-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .app-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .home-page,
+  .files-page,
+  .api-page,
+  .system-page,
+  .settings-page {
+    padding: 16px;
+  }
+}

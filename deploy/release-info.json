@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0",
+  "releaseDate": "2026-01-09T00:00:00Z",
+  "productName": "AI Platform",
+  "platform": "windows",
+  "webInstaller": {
+    "fileName": "AI-Platform-Web-Installer-1.0.0.exe",
+    "fileSize": 0,
+    "fileHash": "",
+    "downloadUrl": "https://www.aidesign.ltd/downloads/AI-Platform-Web-Installer-1.0.0.exe",
+    "description": "Web Installer - Downloads application during installation (2-5 MB)"
+  },
+  "fullInstaller": {
+    "fileName": "AI-Platform-Setup-1.0.0.exe",
+    "fileSize": 171244497,
+    "fileHash": "",
+    "downloadUrl": "https://www.aidesign.ltd/releases/v1.0.0/AI-Platform-Setup-1.0.0.exe",
+    "description": "Full Installer - Offline installation (170 MB)"
+  },
+  "updatePackage": {
+    "fileName": "ai-platform-desktop-1.0.0-x64.nsis.7z",
+    "fileSize": 401000000,
+    "downloadUrl": "https://www.aidesign.ltd/releases/v1.0.0/ai-platform-desktop-1.0.0-x64.nsis.7z",
+    "description": "Update package for Web Installer"
+  },
+  "systemRequirements": {
+    "os": "Windows 10 or later",
+    "architecture": "x64",
+    "memory": "4 GB RAM recommended",
+    "diskSpace": "500 MB"
+  },
+  "releaseNotes": "Initial release of AI Platform desktop application",
+  "signature": "",
+  "minVersion": "1.0.0",
+  "latest": true
+}

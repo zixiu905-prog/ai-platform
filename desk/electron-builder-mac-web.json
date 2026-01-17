@@ -1,0 +1,45 @@
+{
+  "appId": "com.aidesign.aiplatform",
+  "productName": "AI智能体平台",
+  "copyright": "Copyright © 2024 AI Design Platform",
+  "directories": {
+    "output": "dist-mac",
+    "buildResources": "build-resources"
+  },
+  "npmRebuild": false,
+  "files": [
+    "dist/**/*",
+    "../frontend/dist/**/*",
+    "node_modules/**/*"
+  ],
+  "mac": {
+    "category": "public.app-category.developer-tools",
+    "target": [
+      {
+        "target": "dmg",
+        "arch": ["x64", "arm64"]
+      },
+      {
+        "target": "zip",
+        "arch": ["x64", "arm64"]
+      }
+    ],
+    "icon": "build/icon.icns",
+    "hardenedRuntime": true,
+    "gatekeeperAssess": false,
+    "extendInfo": {
+      "NSDocumentsFolderUsageDescription": "访问文档文件夹以打开和保存项目文件",
+      "NSDownloadsFolderUsageDescription": "访问下载文件夹以管理项目文件",
+      "NSCameraUsageDescription": "访问摄像头以支持视频功能",
+      "NSMicrophoneUsageDescription": "访问麦克风以支持语音功能",
+      "NSHighResolutionCapable": true,
+      "NSSupportsAutomaticGraphicsSwitching": true
+    }
+  },
+  "publish": [
+    {
+      "provider": "generic",
+      "url": "https://www.aidesign.ltd/releases"
+    }
+  ]
+}

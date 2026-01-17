@@ -1,0 +1,72 @@
+name: Build macOS
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number (e.g., 1.0.0)'
+        required: true
+        type: string
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm install
+        
+      - name: Build frontend
+        working-directory: ./frontend
+        run: npm run build
+        
+      - name: Install desktop dependencies
+        working-directory: ./desk
+        run: npm install
+        
+      - name: Build main process
+        working-directory: ./desk
+        run: npm run build:main
+        
+      - name: Build macOS DMG (x64)
+        working-directory: ./desk
+        run: npm run build:mac-dmg
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+          TEAM_ID: ${{ secrets.TEAM_ID }}
+          API_KEY_ID: ${{ secrets.API_KEY_ID }}
+          API_KEY_ISSUER_ID: ${{ secrets.API_KEY_ISSUER_ID }}
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          
+      - name: Upload macOS installers
+        uses: actions/upload-artifact@v3
+        with:
+          name: macOS-installers-${{ github.event.inputs.version || github.ref_name }}
+          path: |
+            desk/dist-mac/*.dmg
+            desk/dist-mac/*.zip
+          retention-days: 30
+          
+      - name: Deploy to server (optional)
+        if: github.event_name == 'push'
+        run: |
+          echo "Deploying to server..."
+          # Add your deployment commands here
+          # scp desk/dist-mac/*.dmg user@your-server:/path/to/downloads/
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}

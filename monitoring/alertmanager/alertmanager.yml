@@ -1,0 +1,233 @@
+global:
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_from: 'alerts@aiplatform.com'
+  smtp_auth_username: 'alerts@aiplatform.com'
+  smtp_auth_password: ${SMTP_PASSWORD}
+  resolve_timeout: 5m
+  slack_api_url: ${SLACK_WEBHOOK_URL}
+  wechat_api_url: ${WECHAT_WEBHOOK_URL}
+
+route:
+  group_by: ['alertname', 'cluster', 'service']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 1h
+  receiver: 'web.hook'
+  routes:
+    - match:
+        severity: critical
+      receiver: 'critical-alerts'
+      group_wait: 5s
+      repeat_interval: 30m
+    - match:
+        severity: warning
+      receiver: 'warning-alerts'
+      group_wait: 30s
+      repeat_interval: 2h
+    - match:
+        severity: info
+      receiver: 'info-alerts'
+      group_wait: 60s
+      repeat_interval: 24h
+
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'cluster', 'service']
+
+receivers:
+  - name: 'web.hook'
+    webhook_configs:
+      - url: 'http://backend:3001/api/alerts/webhook'
+        send_resolved: true
+        http_config:
+          bearer_token: ${WEBHOOK_TOKEN}
+
+  - name: 'critical-alerts'
+    email_configs:
+      - to: 'admin@aiplatform.com,devops@aiplatform.com'
+        subject: '[CRITICAL] AiDesign Platform Alert: {{ .GroupLabels.alertname }}'
+        body: |
+          🚨 Critical Alert 🚨
+          
+          Alert: {{ .GroupLabels.alertname }}
+          Service: {{ .GroupLabels.service }}
+          Cluster: {{ .GroupLabels.cluster }}
+          
+          Description:
+          {{ range .Alerts }}
+          - {{ .Annotations.description }}
+          {{ end }}
+          
+          Time: {{ .Alerts.FiredAt | humanizeTimestamp }}
+          Status: {{ .Status }}
+    slack_configs:
+      - api_url: ${SLACK_WEBHOOK_URL}
+        channel: '#alerts'
+        title: '🚨 Critical Alert'
+        text: |
+          *Alert:* {{ .GroupLabels.alertname }}
+          *Service:* {{ .GroupLabels.service }}
+          *Description:* {{ range .Alerts }}{{ .Annotations.description }}{{ end }}
+    wechat_configs:
+      - api_url: ${WECHAT_WEBHOOK_URL}
+        corp_id: ${WECHAT_CORP_ID}
+        agent_id: ${WECHAT_AGENT_ID}
+        api_secret: ${WECHAT_API_SECRET}
+        to_user: '@all'
+        message: |
+          🚨 Critical Alert 🚨
+          Alert: {{ .GroupLabels.alertname }}
+          Service: {{ .GroupLabels.service }}
+          Description: {{ range .Alerts }}{{ .Annotations.description }}{{ end }}
+
+  - name: 'warning-alerts'
+    email_configs:
+      - to: 'dev-team@aiplatform.com'
+        subject: '[WARNING] AiDesign Platform Alert: {{ .GroupLabels.alertname }}'
+        body: |
+          ⚠️ Warning Alert
+          
+          Alert: {{ .GroupLabels.alertname }}
+          Service: {{ .GroupLabels.service }}
+          
+          Description:
+          {{ range .Alerts }}
+          - {{ .Annotations.description }}
+          {{ end }}
+    slack_configs:
+      - api_url: ${SLACK_WEBHOOK_URL}
+        channel: '#warnings'
+        title: '⚠️ Warning Alert'
+        text: |
+          *Alert:* {{ .GroupLabels.alertname }}
+          *Service:* {{ .GroupLabels.service }}
+
+  - name: 'info-alerts'
+    slack_configs:
+      - api_url: ${SLACK_WEBHOOK_URL}
+        channel: '#info'
+        title: 'ℹ️ Info Alert'
+        text: |
+          *Alert:* {{ .GroupLabels.alertname }}
+          *Service:* {{ .GroupLabels.service }}
+          {{ range .Alerts }}
+          告警级别: {{ .Labels.severity }}
+          服务: {{ .Labels.service }}
+          实例: {{ .Labels.instance }}
+          
+          告警信息: {{ .Annotations.summary }}
+          详细描述: {{ .Annotations.description }}
+          
+          开始时间: {{ .StartsAt }}
+          {{ if .EndsAt }}结束时间: {{ .EndsAt }}{{ end }}
+          
+          ---
+          {{ end }}
+        html: |
+          <h3 style="color: #d32f2f;">🚨 严重告警</h3>
+          {{ range .Alerts }}
+          <table style="border: 1px solid #ddd; border-collapse: collapse; width: 100%;">
+            <tr style="background-color: #ffebee;">
+              <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">告警级别</th>
+              <td style="padding: 8px; border: 1px solid #ddd; color: #d32f2f; font-weight: bold;">{{ .Labels.severity }}</td>
+            </tr>
+            <tr>
+              <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">服务</th>
+              <td style="padding: 8px; border: 1px solid #ddd;">{{ .Labels.service }}</td>
+            </tr>
+            <tr>
+              <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">实例</th>
+              <td style="padding: 8px; border: 1px solid #ddd;">{{ .Labels.instance }}</td>
+            </tr>
+            <tr style="background-color: #f5f5f5;">
+              <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">告警信息</th>
+              <td style="padding: 8px; border: 1px solid #ddd;">{{ .Annotations.summary }}</td>
+            </tr>
+            <tr>
+              <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">详细描述</th>
+              <td style="padding: 8px; border: 1px solid #ddd;">{{ .Annotations.description }}</td>
+            </tr>
+            <tr>
+              <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">开始时间</th>
+              <td style="padding: 8px; border: 1px solid #ddd;">{{ .StartsAt }}</td>
+            </tr>
+            {{ if .EndsAt }}
+            <tr>
+              <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">结束时间</th>
+              <td style="padding: 8px; border: 1px solid #ddd;">{{ .EndsAt }}</td>
+            </tr>
+            {{ end }}
+          </table>
+          <hr style="margin: 20px 0;">
+          {{ end }}
+
+  - name: 'warning-alerts'
+    email_configs:
+      - to: 'devops@aiplatform.com'
+        subject: '[WARNING] AiDesign Platform Alert: {{ .GroupLabels.alertname }}'
+        body: |
+          {{ range .Alerts }}
+          告警级别: {{ .Labels.severity }}
+          服务: {{ .Labels.service }}
+          实例: {{ .Labels.instance }}
+          
+          告警信息: {{ .Annotations.summary }}
+          详细描述: {{ .Annotations.description }}
+          
+          开始时间: {{ .StartsAt }}
+          {{ if .EndsAt }}结束时间: {{ .EndsAt }}{{ end }}
+          
+          ---
+          {{ end }}
+
+  - name: 'info-alerts'
+    email_configs:
+      - to: 'team@aiplatform.com'
+        subject: '[INFO] AiDesign Platform: {{ .GroupLabels.alertname }}'
+        body: |
+          {{ range .Alerts }}
+          告警级别: {{ .Labels.severity }}
+          服务: {{ .Labels.service }}
+          
+          告警信息: {{ .Annotations.summary }}
+          详细描述: {{ .Annotations.description }}
+          
+          开始时间: {{ .StartsAt }}
+          
+          ---
+          {{ end }}
+
+  - name: 'slack-alerts'
+    slack_configs:
+      - api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
+        channel: '#alerts'
+        title: 'AiDesign Platform Alert'
+        text: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+        send_resolved: true
+        color: '{{ if .Alerts.Firing }}danger{{ else }}good{{ end }}'
+        fields:
+          - title: Severity
+            value: '{{ .GroupLabels.severity }}'
+            short: true
+          - title: Service
+            value: '{{ .GroupLabels.service }}'
+            short: true
+          - title: Instance
+            value: '{{ .GroupLabels.instance }}'
+            short: true
+          - title: Description
+            value: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+            short: false
+
+  - name: 'wechat-alerts'
+    webhook_configs:
+      - url: 'http://localhost:8080/api/wechat/alert'
+        send_resolved: true
+        http_config:
+          bearer_token: 'your_wechat_token'
+
+templates:
+  - '/etc/alertmanager/templates/*.tmpl'

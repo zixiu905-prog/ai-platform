@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI智能体平台 - 桌面版</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        background: linear-gradient(135deg, #0a0e1a 0%, #1a1f36 100%);
+        overflow: hidden;
+      }
+      
+      /* 桌面应用特有样式 */
+      .desktop-titlebar {
+        -webkit-app-region: drag;
+        height: 30px;
+        background: rgba(10, 14, 26, 0.8);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .desktop-titlebar button {
+        -webkit-app-region: no-drag;
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        padding: 5px 10px;
+        border-radius: 4px;
+      }
+      
+      .desktop-titlebar button:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+      
+      .titlebar-controls {
+        position: absolute;
+        right: 10px;
+        display: flex;
+        gap: 5px;
+      }
+      
+      .titlebar-title {
+        color: white;
+        font-size: 12px;
+        opacity: 0.8;
+      }
+      
+      /* 主内容区域调整 */
+      #root {
+        padding-top: 30px;
+        height: 100vh;
+        overflow: hidden;
+      }
+      
+      /* Glassmorphism 效果 */
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      }
+      
+      .glass-card {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(8px);
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.2);
+      }
+      
+      /* 滚动条样式 */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      
+      ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+      }
+      
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+      }
+      
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./main.tsx"></script>
+  </body>
+</html>

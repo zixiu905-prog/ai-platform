@@ -1,0 +1,476 @@
+/**
+ * 多模态输入界面的优化CSS
+ * 提供更好的性能和用户体验
+ */
+
+/* 基础优化 */
+.multimodal-input-container {
+  --primary-color: #1890ff;
+  --success-color: #52c41a;
+  --warning-color: #faad14;
+  --error-color: #ff4d4f;
+  --text-color: rgba(0, 0, 0, 0.85);
+  --text-color-secondary: rgba(0, 0, 0, 0.45);
+  --background-color: #fafafa;
+  --border-color: #d9d9d9;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  
+  /* 性能优化 */
+  contain: layout style paint;
+  will-change: transform, opacity;
+  
+  /* 滚动优化 */
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  
+  /* 触摸优化 */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 硬件加速动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+/* 优化的过渡效果 */
+.optimized-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition-property: transform, opacity, background-color, border-color;
+}
+
+.optimized-transition-fast {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.optimized-transition-slow {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 虚拟滚动容器 */
+.virtual-scroll-container {
+  height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  contain: strict;
+}
+
+.virtual-scroll-item {
+  contain: content;
+  height: auto;
+  min-height: 60px;
+}
+
+/* 优化的按钮样式 */
+.optimized-button {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  text-decoration: none;
+  background: var(--primary-color);
+  color: white;
+  optimized-transition;
+  transform: translateZ(0); /* 触发硬件加速 */
+}
+
+.optimized-button:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+}
+
+.optimized-button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.optimized-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.optimized-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s;
+}
+
+.optimized-button:active::before {
+  width: 200px;
+  height: 200px;
+}
+
+/* 优化的输入框 */
+.optimized-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-color);
+  background-color: white;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  transform: translateZ(0);
+}
+
+.optimized-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+}
+
+.optimized-input::placeholder {
+  color: var(--text-color-secondary);
+}
+
+/* 加载骨架屏 */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e0e0e0 50%,
+    #f0f0f0 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-text {
+  height: 16px;
+  margin: 8px 0;
+  border-radius: 4px;
+}
+
+.skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+/* 优化的卡片 */
+.optimized-card {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px var(--shadow-color);
+  overflow: hidden;
+  contain: content;
+  transform: translateZ(0);
+  optimized-transition;
+}
+
+.optimized-card:hover {
+  box-shadow: 0 4px 16px var(--shadow-color);
+  transform: translateY(-2px);
+}
+
+.optimized-card-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+  background: #fafafa;
+}
+
+.optimized-card-body {
+  padding: 20px;
+}
+
+/* 优化的标签页 */
+.optimized-tabs {
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: stretch;
+}
+
+.optimized-tab {
+  padding: 12px 20px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  color: var(--text-color-secondary);
+  optimized-transition;
+  position: relative;
+}
+
+.optimized-tab:hover {
+  color: var(--primary-color);
+}
+
+.optimized-tab.active {
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+}
+
+.optimized-tab::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--primary-color);
+  transform: scaleX(0);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.optimized-tab.active::after {
+  transform: scaleX(1);
+}
+
+/* 优化的上传区域 */
+.optimized-upload-area {
+  border: 2px dashed var(--border-color);
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: #fafafa;
+  position: relative;
+  overflow: hidden;
+}
+
+.optimized-upload-area:hover {
+  border-color: var(--primary-color);
+  background: #f0f8ff;
+}
+
+.optimized-upload-area.dragover {
+  border-color: var(--primary-color);
+  background: #e6f7ff;
+  transform: scale(1.02);
+}
+
+.optimized-upload-area::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.optimized-upload-area:hover::before {
+  left: 100%;
+}
+
+/* 优化的进度条 */
+.optimized-progress {
+  height: 6px;
+  background: #f0f0f0;
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.optimized-progress-bar {
+  height: 100%;
+  background: var(--primary-color);
+  border-radius: 3px;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.optimized-progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+/* 优化的提示消息 */
+.optimized-message {
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  animation: slideIn 0.3s ease-out;
+  transform: translateZ(0);
+}
+
+.optimized-message.success {
+  background: #f6ffed;
+  border: 1px solid #b7eb8f;
+  color: #389e0d;
+}
+
+.optimized-message.error {
+  background: #fff2f0;
+  border: 1px solid #ffccc7;
+  color: #cf1322;
+}
+
+.optimized-message.warning {
+  background: #fffbe6;
+  border: 1px solid #ffe58f;
+  color: #d48806;
+}
+
+.optimized-message.info {
+  background: #e6f7ff;
+  border: 1px solid #91d5ff;
+  color: #0958d9;
+}
+
+/* 响应式设计优化 */
+@media (max-width: 768px) {
+  .multimodal-input-container {
+    --padding-small: 8px;
+    --padding-medium: 12px;
+    --padding-large: 16px;
+  }
+  
+  .optimized-tab {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+  
+  .optimized-upload-area {
+    padding: 24px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .optimized-card-body {
+    padding: 16px;
+  }
+  
+  .optimized-button {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+}
+
+/* 暗色主题支持 */
+@media (prefers-color-scheme: dark) {
+  .multimodal-input-container {
+    --text-color: rgba(255, 255, 255, 0.85);
+    --text-color-secondary: rgba(255, 255, 255, 0.45);
+    --background-color: #141414;
+    --border-color: #434343;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+  }
+  
+  .optimized-input {
+    background-color: #141414;
+    border-color: #434343;
+    color: var(--text-color);
+  }
+  
+  .optimized-card {
+    background: #1f1f1f;
+    border-color: #434343;
+  }
+  
+  .optimized-upload-area {
+    background: #1f1f1f;
+    border-color: #434343;
+  }
+  
+  .optimized-upload-area:hover {
+    background: #262626;
+    border-color: var(--primary-color);
+  }
+}
+
+/* 减少动画的用户偏好支持 */
+@media (prefers-reduced-motion: reduce) {
+  .optimized-transition,
+  .optimized-transition-fast,
+  .optimized-transition-slow {
+    transition: none;
+  }
+  
+  .skeleton {
+    animation: none;
+  }
+  
+  .optimized-progress-bar::after {
+    animation: none;
+  }
+}
+
+/* 高对比度模式支持 */
+@media (prefers-contrast: high) {
+  .optimized-input,
+  .optimized-card {
+    border-width: 2px;
+  }
+  
+  .optimized-button {
+    border: 2px solid var(--primary-color);
+  }
+}

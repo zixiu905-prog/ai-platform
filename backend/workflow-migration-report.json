@@ -1,0 +1,35 @@
+{
+  "timestamp": "2025-12-22T14:21:42.175Z",
+  "summary": {
+    "totalFilesScanned": 11,
+    "filesUpdated": 11,
+    "successRate": "100.00%"
+  },
+  "updatedFiles": [
+    "/home/ai design/backend/src/routes/adminManagement.ts",
+    "/home/ai design/backend/src/routes/n8nWorkflows.ts",
+    "/home/ai design/backend/src/routes/workflow.ts",
+    "/home/ai design/backend/src/routes/workflowMonitoring.ts",
+    "/home/ai design/backend/src/routes/workflowOptimization.ts",
+    "/home/ai design/backend/src/services/desktopCommunicationService.ts",
+    "/home/ai design/backend/src/services/n8nNodeExecutor.ts",
+    "/home/ai design/backend/src/services/n8nWorkflowService.ts",
+    "/home/ai design/backend/src/services/workflowEngine.ts",
+    "/home/ai design/backend/src/services/workflowMonitorService.ts",
+    "/home/ai design/backend/src/services/workflowOptimizationService.ts"
+  ],
+  "nextSteps": [
+    "1. 检查所有更新后的文件，确保功能正常",
+    "2. 运行测试套件验证迁移结果",
+    "3. 更新相关的API文档",
+    "4. 检查弃用的方法调用并替换为新API",
+    "5. 验证工作流执行功能",
+    "6. 测试新的优化和监控功能"
+  ],
+  "notes": [
+    "所有旧的工作流服务已合并到 UnifiedWorkflowService",
+    "监控功能现在集成在工作流执行中",
+    "部分方法参数可能需要调整以适应新的统一API",
+    "类型定义已统一，可能需要更新相关的接口定义"
+  ]
+}

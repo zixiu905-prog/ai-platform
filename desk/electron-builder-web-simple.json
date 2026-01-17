@@ -1,0 +1,27 @@
+{
+  "appId": "com.aidesign.aiplatform",
+  "productName": "AIPlatform",
+  "copyright": "Copyright © 2024 AI Design Platform",
+  "directories": {
+    "output": "dist-web",
+    "buildResources": "build-resources"
+  },
+  "npmRebuild": false,
+  "files": [],
+  "win": {
+    "target": [
+      {
+        "target": "nsis-web",
+        "arch": ["x64"]
+      }
+    ],
+    "sign": null
+  },
+  "nsisWeb": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "perMachine": false,
+    "runAfterFinish": true,
+    "artifactName": "AI-Platform-Web-Installer-${version}.${ext}"
+  }
+}

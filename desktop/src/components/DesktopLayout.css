@@ -1,0 +1,208 @@
+.desktop-layout {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.custom-titlebar {
+  height: 40px;
+  background: #ffffff;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  -webkit-app-region: drag;
+  user-select: none;
+}
+
+[data-theme="dark"] .custom-titlebar {
+  background: #141414;
+  border-bottom: 1px solid #434343;
+}
+
+.titlebar-left {
+  display: flex;
+  align-items: center;
+  -webkit-app-region: no-drag;
+}
+
+.titlebar-center {
+  flex: 1;
+  text-align: center;
+  -webkit-app-region: drag;
+}
+
+.app-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #000000;
+}
+
+[data-theme="dark"] .app-title {
+  color: #ffffff;
+}
+
+.titlebar-right {
+  display: flex;
+  align-items: center;
+  -webkit-app-region: no-drag;
+}
+
+.menu-toggle {
+  margin-right: 8px;
+}
+
+.sidebar-title {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+}
+
+.main-layout {
+  height: calc(100vh - 40px);
+}
+
+.desktop-sider {
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.06);
+}
+
+.desktop-content {
+  margin: 0;
+  padding: 24px;
+  background: #f5f5f5;
+  overflow-y: auto;
+}
+
+[data-theme="dark"] .desktop-content {
+  background: #000000;
+}
+
+.window-controls {
+  display: flex;
+  align-items: center;
+}
+
+.control-button {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+  margin: 0 1px;
+}
+
+.control-button:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.control-button.minimize:hover {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+}
+
+.control-button.maximize:hover {
+  background: rgba(40, 167, 69, 0.2);
+  color: #28a745;
+}
+
+.control-button.close:hover {
+  background: rgba(220, 53, 69, 0.2);
+  color: #dc3545;
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+}
+
+.notification-center {
+  display: flex;
+  align-items: center;
+}
+
+.notification-item.unread {
+  border-left: 3px solid #1890ff;
+  background: linear-gradient(to right, rgba(24, 144, 255, 0.05), transparent);
+}
+
+[data-theme="dark"] .notification-item.unread {
+  background: linear-gradient(to right, rgba(24, 144, 255, 0.1), transparent);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .app-title {
+    display: none;
+  }
+  
+  .theme-toggle span {
+    display: none;
+  }
+  
+  .desktop-content {
+    padding: 16px;
+  }
+}
+
+/* 滚动条样式 */
+.desktop-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.desktop-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.desktop-content::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.desktop-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .desktop-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .desktop-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* 菜单样式 */
+.ant-menu-item {
+  margin: 0;
+  height: 40px;
+  line-height: 40px;
+}
+
+.ant-menu-item:hover {
+  color: #1890ff;
+}
+
+.ant-menu-item-selected {
+  color: #1890ff;
+  background: rgba(24, 144, 255, 0.1);
+}
+
+[data-theme="dark"] .ant-menu {
+  background: transparent;
+}
+
+[data-theme="dark"] .ant-menu-item {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+[data-theme="dark"] .ant-menu-item:hover {
+  color: #1890ff;
+  background: rgba(24, 144, 255, 0.1);
+}
+
+[data-theme="dark"] .ant-menu-item-selected {
+  color: #1890ff;
+  background: rgba(24, 144, 255, 0.15);
+}

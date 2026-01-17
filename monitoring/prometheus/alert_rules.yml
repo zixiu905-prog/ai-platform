@@ -1,0 +1,300 @@
+groups:
+  - name: aiplatform_alerts
+    rules:
+      # 系统告警
+      - alert: HighCPUUsage
+        expr: 100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m]) * 100)) > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "CPU使用率过高"
+          description: "实例 {{ $labels.instance }} CPU使用率超过80%，当前值: {{ $value }}%"
+
+      - alert: HighMemoryUsage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "内存使用率过高"
+          description: "实例 {{ $labels.instance }} 内存使用率超过85%，当前值: {{ $value }}%"
+
+      - alert: HighDiskUsage
+        expr: (node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_free_bytes{mountpoint="/"}) / node_filesystem_size_bytes{mountpoint="/"} * 100 > 90
+        for: 5m
+        labels:
+          severity: critical
+          service: system
+        annotations:
+          summary: "磁盘使用率过高"
+          description: "实例 {{ $labels.instance }} 磁盘使用率超过90%，当前值: {{ $value }}%"
+
+      - alert: DiskSpaceLow
+        expr: node_filesystem_free_bytes{mountpoint="/"} < 10737418240  # 10GB
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "磁盘空间不足"
+          description: "实例 {{ $labels.instance }} 剩余磁盘空间少于10GB，当前值: {{ $value | humanize1024 }}B"
+
+      # 应用服务告警
+      - alert: ServiceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: application
+        annotations:
+          summary: "服务离线"
+          description: "{{ $labels.job }} 服务离线超过1分钟"
+
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) * 100 > 5
+        for: 2m
+        labels:
+          severity: warning
+          service: application
+        annotations:
+          summary: "API错误率过高"
+          description: "{{ $labels.job }} API错误率超过5%，当前值: {{ $value }}%"
+
+      - alert: HighResponseTime
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 2
+        for: 5m
+        labels:
+          severity: warning
+          service: application
+        annotations:
+          summary: "API响应时间过长"
+          description: "{{ $labels.job }} P95响应时间超过2秒，当前值: {{ $value }}s"
+
+      # 业务告警
+      - alert: LowActiveUsers
+        expr: active_users_total < 10
+        for: 10m
+        labels:
+          severity: info
+          service: business
+        annotations:
+          summary: "活跃用户数过低"
+          description: "活跃用户数少于10人，当前值: {{ $value }}"
+
+      - alert: HighAIRequests
+        expr: rate(ai_requests_total[5m]) > 100
+        for: 5m
+        labels:
+          severity: warning
+          service: business
+        annotations:
+          summary: "AI请求量激增"
+          description: "AI请求率超过100 req/min，当前值: {{ $value }}"
+
+      - alert: DatabaseConnectionsHigh
+        expr: pg_stat_database_numbackends > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: database
+        annotations:
+          summary: "数据库连接数过高"
+          description: "数据库连接数超过80，当前值: {{ $value }}"
+
+      - alert: RedisCacheLowHitRate
+        expr: redis_keyspace_hits_total / (redis_keyspace_hits_total + redis_keyspace_misses_total) * 100 < 85
+        for: 10m
+        labels:
+          severity: warning
+          service: cache
+        annotations:
+          summary: "Redis缓存命中率低"
+          description: "Redis缓存命中率低于85%，当前值: {{ $value }}%"
+
+      # SSL证书告警
+      - alert: SSLCertificateExpiringSoon
+        expr: ssl_certificate_expiry_seconds < 86400 * 7  # 7天内
+        for: 0m
+        labels:
+          severity: warning
+          service: security
+        annotations:
+          summary: "SSL证书即将过期"
+          description: "{{ $labels.instance }} SSL证书将在7天内过期"
+
+      - alert: SSLCertificateExpired
+        expr: ssl_certificate_expiry_seconds < 0
+        for: 0m
+        labels:
+          severity: critical
+          service: security
+        annotations:
+          summary: "SSL证书已过期"
+          description: "{{ $labels.instance }} SSL证书已过期"
+          service: application
+        annotations:
+          summary: "服务下线"
+          description: "服务 {{ $labels.job }} 实例 {{ $labels.instance }} 已下线"
+
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+          service: application
+        annotations:
+          summary: "HTTP错误率过高"
+          description: "HTTP 5xx错误率超过5%，当前值: {{ $value | humanizePercentage }}"
+
+      - alert: HighLatency
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          severity: warning
+          service: application
+        annotations:
+          summary: "响应延迟过高"
+          description: "95%分位响应时间超过1秒，当前值: {{ $value }}s"
+
+      - alert: TooManyConnections
+        expr: pg_stat_database_numbackends > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: database
+        annotations:
+          summary: "数据库连接数过多"
+          description: "PostgreSQL数据库 {{ $labels.datname }} 连接数超过80，当前值: {{ $value }}"
+
+      - alert: DatabaseDown
+        expr: up{job="postgres-exporter"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: database
+        annotations:
+          summary: "数据库服务下线"
+          description: "PostgreSQL数据库服务已下线"
+
+      # Redis告警
+      - alert: RedisDown
+        expr: up{job="redis-exporter"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: cache
+        annotations:
+          summary: "Redis服务下线"
+          description: "Redis缓存服务已下线"
+
+      - alert: RedisHighMemoryUsage
+        expr: redis_memory_used_bytes / redis_memory_max_bytes * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+          service: cache
+        annotations:
+          summary: "Redis内存使用率过高"
+          description: "Redis内存使用率超过90%，当前值: {{ $value }}%"
+
+      # AI服务特定告警
+      - alert: AIServiceError
+        expr: rate(ai_service_errors_total[5m]) > 0.1
+        for: 2m
+        labels:
+          severity: warning
+          service: ai
+        annotations:
+          summary: "AI服务错误率过高"
+          description: "AI服务错误率超过10%，当前值: {{ $value }}"
+
+      - alert: AILongProcessingTime
+        expr: histogram_quantile(0.95, rate(ai_processing_duration_seconds_bucket[5m])) > 30
+        for: 5m
+        labels:
+          severity: warning
+          service: ai
+        annotations:
+          summary: "AI处理时间过长"
+          description: "95%分位AI处理时间超过30秒，当前值: {{ $value }}s"
+
+      - alert: AIResourceExhaustion
+        expr: ai_active_requests > ai_max_concurrent_requests * 0.9
+        for: 3m
+        labels:
+          severity: critical
+          service: ai
+        annotations:
+          summary: "AI服务资源耗尽"
+          description: "AI服务并发请求数超过最大容量的90%，当前值: {{ $value }}"
+
+      # 工作流告警
+      - alert: WorkflowFailure
+        expr: increase(workflow_failures_total[5m]) > 5
+        for: 2m
+        labels:
+          severity: warning
+          service: workflow
+        annotations:
+          summary: "工作流失败率过高"
+          description: "5分钟内工作流失败次数超过5次，当前值: {{ $value }}"
+
+      - alert: WorkflowQueueBacklog
+        expr: workflow_queue_length > 100
+        for: 5m
+        labels:
+          severity: warning
+          service: workflow
+        annotations:
+          summary: "工作流队列积压"
+          description: "工作流队列长度超过100，当前值: {{ $value }}"
+
+      # 用户活动告警
+      - alert: SuddenTrafficSpike
+        expr: rate(http_requests_total[5m]) > rate(http_requests_total[1h] offset 1h) * 3
+        for: 2m
+        labels:
+          severity: info
+          service: application
+        annotations:
+          summary: "流量异常增长"
+          description: "当前请求率是1小时前的3倍以上，当前值: {{ $value }} req/s"
+
+      - alert: NoUserActivity
+        expr: rate(http_requests_total[15m]) < 0.1
+        for: 30m
+        labels:
+          severity: info
+          service: application
+        annotations:
+          summary: "用户活动异常"
+          description: "15分钟内用户活动非常低，请求率: {{ $value }} req/s"
+
+  - name: aiplatform_recording
+    interval: 30s
+    rules:
+      # SLA相关指标记录
+      - record: aiplatform:uptime:percentage
+        expr: up{job=~"aiplatform.*"} * 100
+        
+      - record: aiplatform:request_rate:5m
+        expr: sum(rate(http_requests_total[5m])) by (service)
+        
+      - record: aiplatform:error_rate:5m
+        expr: sum(rate(http_requests_total{status=~"5.."}[5m])) by (service) / sum(rate(http_requests_total[5m])) by (service) * 100
+        
+      - record: aiplatform:response_time:p95:5m
+        expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le, service))
+        
+      # AI服务特定指标记录
+      - record: aiplatform:ai_request_rate:5m
+        expr: sum(rate(ai_requests_total[5m])) by (model)
+        
+      - record: aiplatform:ai_success_rate:5m
+        expr: sum(rate(ai_requests_success_total[5m])) by (model) / sum(rate(ai_requests_total[5m])) by (model) * 100
+        
+      - record: aiplatform:ai_cost:5m
+        expr: sum(rate(ai_cost_total[5m])) by (model)

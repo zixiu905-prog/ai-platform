@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+         xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+         xmlns:uap2="http://schemas.microsoft.com/appx/manifest/uap/windows10/2"
+         xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+         xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+         xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+         xmlns:desktop2="http://schemas.microsoft.com/appx/manifest/desktop/windows10/2"
+         xmlns:desktop3="http://schemas.microsoft.com/appx/manifest/desktop/windows10/3">
+
+  <Identity Name="AIPlatformTeam.AIPlatformDesktop"
+            Publisher="CN=AI Platform Team, O=AI Platform Team, L=Beijing, S=Beijing, C=CN"
+            Version="1.0.0.0"
+            ProcessorArchitecture="x64" />
+
+  <Properties>
+    <DisplayName>AI智能体平台</DisplayName>
+    <PublisherDisplayName>AI Platform Team</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <Square44x44Logo>Assets\Square44x44Logo.png</Square44x44Logo>
+    <Square71x71Logo>Assets\Square71x71Logo.png</Square71x71Logo>
+    <Square150x150Logo>Assets\Square150x150Logo.png</Square150x150Logo>
+    <Square310x310Logo>Assets\Square310x310Logo.png</Square310x310Logo>
+    <Wide310x150Logo>Assets\Wide310x150Logo.png</Wide310x150Logo>
+    <Description>AI驱动的智能开发平台，提供代码分析、智能推荐和协作功能</Description>
+    <Keywords>AI,开发,平台,智能,代码分析,推荐,协作</Keywords>
+    <PackageIntegrity>
+      <Content Enforcement="on" />
+    </PackageIntegrity>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.14393.0" MaxVersionTested="10.0.19041.0" />
+    <PackageDependency Name="Microsoft.VCLibs.140.00.UWPDesktop" MinVersion="14.0.29231.0" Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="zh-CN" />
+    <Resource Language="en-US" />
+    <Resource uap:Scale="100" />
+    <Resource uap:Scale="125" />
+    <Resource uap:Scale="150" />
+    <Resource uap:Scale="200" />
+    <Resource uap:Scale="400" />
+  </Resources>
+
+  <Applications>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="$targetentrypoint$">
+      <uap:VisualElements DisplayName="AI智能体平台"
+                         Square150x150Logo="Assets\Square150x150Logo.png"
+                         Square44x44Logo="Assets\Square44x44Logo.png"
+                         Description="AI驱动的智能开发平台"
+                         BackgroundColor="transparent"
+                         AppListEntry="default">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"
+                         Square71x71Logo="Assets\Square71x71Logo.png"
+                         Square310x310Logo="Assets\Square310x310Logo.png" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#0a0e1a" />
+      </uap:VisualElements>
+
+      <Extensions>
+        <uap3:Extension Category="windows.appExecutionAlias"
+                        Executable="AI智能体平台.exe"
+                        EntryPoint="Windows.FullTrustApplication">
+          <uap3:AppExecutionAlias>
+            <uap3:ExecutionAlias Alias="aiplatform.exe" />
+            <uap3:ExecutionAlias Alias="ai-desktop.exe" />
+          </uap3:AppExecutionAlias>
+        </uap3:Extension>
+
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="aiproj" DesiredView="default">
+            <uap:SupportedFileTypes>
+              <uap:FileType>.aiproj</uap:FileType>
+              <uap:FileType>.aiconfig</uap:FileType>
+            </uap:SupportedFileTypes>
+            <uap:DisplayName>AI Platform Project</uap:DisplayName>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+
+        <uap:Extension Category="windows.protocol">
+          <uap:Protocol Name="aiproj">
+            <uap:DisplayName>AI Platform</uap:DisplayName>
+          </uap:Protocol>
+        </uap:Extension>
+
+        <desktop:Extension Category="windows.startupTask"
+                          Executable="AI智能体平台.exe"
+                          EntryPoint="Windows.FullTrustApplication">
+          <desktop:StartupTask TaskId="AIPlatformAutoStart"
+                             Enabled="false"
+                             DisplayName="AI智能体平台"
+                             Description="启动时运行AI智能体平台" />
+        </desktop:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <Capability Name="internetClient" />
+    <Capability Name="internetClientServer" />
+    <Capability Name="privateNetworkClientServer" />
+    <uap:Capability Name="documentsLibrary" />
+    <uap:Capability Name="picturesLibrary" />
+    <uap:Capability Name="videosLibrary" />
+    <uap:Capability Name="musicLibrary" />
+    <uap:Capability Name="removableStorage" />
+    <rescap:Capability Name="runFullTrust" />
+    <rescap:Capability Name="enterpriseAuthentication" />
+    <rescap:Capability Name="sharedUserCertificates" />
+    <rescap:Capability Name="systemManagement" />
+  </Capabilities>
+
+</Package>

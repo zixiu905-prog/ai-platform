@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Platform - 下载中心</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+        .download-section {
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .download-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .download-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+        .download-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+        .download-card.recommended {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+        .version-tag {
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .recommended-badge {
+            background: #4CAF50;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .file-info {
+            margin-bottom: 20px;
+        }
+        .file-info p {
+            margin: 8px 0;
+            color: #666;
+            font-size: 14px;
+        }
+        .file-info strong {
+            color: #333;
+        }
+        .download-btn {
+            display: inline-block;
+            width: 100%;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        .download-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        .platform-icon {
+            width: 24px;
+            height: 24px;
+        }
+        .features {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #e0e0e0;
+        }
+        .features h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .features ul {
+            list-style: none;
+            padding: 0;
+        }
+        .features li {
+            padding: 8px 0;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .features li::before {
+            content: "✓";
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .system-requirements {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        .system-requirements h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .system-requirements p {
+            color: #666;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 AI Platform 桌面版</h1>
+        <p class="subtitle">下载安装AI智能体平台桌面应用，享受更流畅、更强大的本地AI设计体验</p>
+
+        <div class="download-section">
+            <h2>
+                <svg class="platform-icon" viewBox="0 0 24 24" fill="#0078d4">
+                    <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24L10.949 22.699"/>
+                </svg>
+                Windows 版本
+            </h2>
+            
+            <div class="download-grid">
+                <div class="download-card recommended">
+                    <div class="card-header">
+                        <div>
+                            <span class="card-title">Web Installer</span>
+                            <span class="recommended-badge">推荐</span>
+                        </div>
+                        <span class="version-tag">v1.0.0</span>
+                    </div>
+                    <div class="file-info">
+                        <p><strong>文件大小:</strong> 3 MB</p>
+                        <p><strong>发布日期:</strong> 2026-01-09</p>
+                        <p><strong>说明:</strong> 从云端下载安装，体积小，速度快（推荐）</p>
+                    </div>
+                    <a href="https://www.aidesign.ltd/downloads/AI-Platform-Web-Installer-1.0.0.exe" class="download-btn">
+                        下载 Web 安装程序
+                    </a>
+                </div>
+
+                <div class="download-card">
+                    <div class="card-header">
+                        <div>
+                            <span class="card-title">Full Installer</span>
+                        </div>
+                        <span class="version-tag">v1.0.0</span>
+                    </div>
+                    <div class="file-info">
+                        <p><strong>文件大小:</strong> 164 MB</p>
+                        <p><strong>发布日期:</strong> 2026-01-09</p>
+                        <p><strong>说明:</strong> 完整离线安装包，无需联网，包含所有组件</p>
+                    </div>
+                    <a href="https://www.aidesign.ltd/releases/v1.0.0/AI-Platform-Setup-1.0.0.exe" class="download-btn">
+                        下载完整安装程序
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="features">
+            <h3>✨ 核心特性</h3>
+            <ul>
+                <li>一键安装 - 简单的安装流程，快速开始使用</li>
+                <li>跨平台支持 - 完美支持Windows系统</li>
+                <li>离线工作 - 无需联网即可使用大部分功能</li>
+                <li>自动更新 - 支持在线更新到最新版本</li>
+                <li>高性能 - 本地运行，响应速度快</li>
+            </ul>
+        </div>
+
+        <div class="system-requirements">
+            <h3>💻 系统要求</h3>
+            <p><strong>操作系统:</strong> Windows 10 或 Windows 11 (64位)</p>
+            <p><strong>处理器:</strong> x86_64 (64位) 处理器</p>
+            <p><strong>内存:</strong> 至少 4GB RAM (推荐 8GB+)</p>
+            <p><strong>存储空间:</strong> 至少 2GB 可用空间</p>
+            <p><strong>网络:</strong> 需要联网（部分功能需要）</p>
+        </div>
+
+        <div style="margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+            <p>© 2026 AI Platform. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

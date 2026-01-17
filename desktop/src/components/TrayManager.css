@@ -1,0 +1,331 @@
+.tray-manager {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.tray-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.tray-header .ant-typography {
+  margin-bottom: 8px;
+}
+
+.status-info {
+  padding: 16px 0;
+}
+
+.status-main {
+  margin-bottom: 24px;
+}
+
+.status-message {
+  font-weight: 500;
+  color: #262626;
+  margin-top: 4px;
+}
+
+.status-controls {
+  margin-bottom: 16px;
+}
+
+.status-controls .ant-btn {
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+
+.progress-control {
+  margin-top: 16px;
+}
+
+/* 卡片标题样式 */
+.ant-card-head-title .ant-space {
+  align-items: center;
+}
+
+.ant-list-item-meta-title {
+  margin-bottom: 8px;
+}
+
+.ant-list-item-meta-description {
+  color: #8c8c8c;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .tray-manager {
+    padding: 16px;
+  }
+  
+  .status-main .ant-space {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .status-controls .ant-btn {
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+}
+
+@media (max-width: 576px) {
+  .tray-manager {
+    padding: 12px;
+  }
+  
+  .status-main .ant-space {
+    width: 100%;
+  }
+  
+  .status-main .ant-space-item {
+    width: 100%;
+  }
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tray-manager .ant-card {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.tray-manager .ant-col:nth-child(1) .ant-card {
+  animation-delay: 0.1s;
+}
+
+.tray-manager .ant-col:nth-child(2) .ant-card {
+  animation-delay: 0.2s;
+}
+
+.tray-manager .ant-col:nth-child(3) .ant-card {
+  animation-delay: 0.3s;
+}
+
+/* 状态指示器 */
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.status-indicator.idle {
+  background-color: #d9d9d9;
+}
+
+.status-indicator.working {
+  background-color: #1890ff;
+  animation: pulse 1.5s infinite;
+}
+
+.status-indicator.success {
+  background-color: #52c41a;
+}
+
+.status-indicator.error {
+  background-color: #ff4d4f;
+}
+
+.status-indicator.warning {
+  background-color: #faad14;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(24, 144, 255, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(24, 144, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(24, 144, 255, 0);
+  }
+}
+
+/* 通知列表样式 */
+.notification-item {
+  border-left: 3px solid #f0f0f0;
+  padding-left: 12px;
+  transition: border-color 0.3s ease;
+}
+
+.notification-item:hover {
+  border-left-color: #1890ff;
+}
+
+.notification-time {
+  font-size: 11px;
+  color: #bfbfbf;
+  margin-top: 4px;
+}
+
+/* 快捷操作样式 */
+.shortcut-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.shortcut-item:last-child {
+  border-bottom: none;
+}
+
+.shortcut-info {
+  flex: 1;
+}
+
+.shortcut-name {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.shortcut-accelerator {
+  font-family: 'Courier New', monospace;
+  background-color: #f5f5f5;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #666;
+}
+
+.shortcut-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 模态框样式 */
+.ant-modal .ant-form-item {
+  margin-bottom: 16px;
+}
+
+.ant-modal .ant-form-item:last-child {
+  margin-bottom: 0;
+}
+
+/* 标签样式 */
+.tray-manager .ant-tag {
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px;
+}
+
+/* 徽章样式 */
+.ant-badge-count {
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  min-width: 18px;
+  height: 18px;
+  line-height: 18px;
+}
+
+/* 列表分页样式 */
+.ant-pagination {
+  margin-top: 16px;
+  text-align: center;
+}
+
+/* 按钮组样式 */
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.button-group .ant-btn {
+  border-radius: 16px;
+  font-size: 12px;
+  height: 28px;
+  padding: 0 12px;
+}
+
+/* 进度条样式 */
+.ant-progress-line {
+  margin-bottom: 0;
+}
+
+.ant-progress-text {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* 输入框样式 */
+.ant-input-number {
+  width: 100%;
+}
+
+/* 选择器样式 */
+.ant-select {
+  width: 100%;
+}
+
+/* 开关样式 */
+.ant-switch {
+  min-width: 44px;
+}
+
+.ant-switch-loading-icon,
+.ant-switch-handle {
+  height: 18px;
+  width: 18px;
+}
+
+/* 滚动条样式 */
+.ant-list-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ant-list-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.ant-list-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.ant-list-body::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* 悬浮效果 */
+.tray-manager .ant-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+.tray-manager .ant-list-item:hover {
+  background-color: #fafafa;
+  transition: background-color 0.2s ease;
+}
+
+/* 空状态样式 */
+.ant-empty {
+  padding: 40px 0;
+}
+
+.ant-empty-description {
+  color: #bfbfbf;
+  font-size: 14px;
+}
